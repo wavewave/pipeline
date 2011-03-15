@@ -17,8 +17,8 @@ import HEP.Automation.MadGraph.Dataset.Set20110315set1
 
 
 main :: IO ()
-main = do putStrLn "benchmark models 20110311sets"
-          putStrLn "models : Zp "
+main = do putStrLn "benchmark models 20110315sets"
+          putStrLn "models : Six"
 
 	  let cmdSequence = do 
                 compileFortran
