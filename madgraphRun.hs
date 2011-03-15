@@ -13,12 +13,12 @@ import HEP.Automation.MadGraph.Run
 
 import System.Posix.Unistd (sleep)
 
-import HEP.Automation.MadGraph.Dataset.Set20110302_1
+import HEP.Automation.MadGraph.Dataset.Set20110315set1
 
 
 main :: IO ()
-main = do putStrLn "benchmark models 20110302_1 sets" 
-          putStrLn "models : Wprime "
+main = do putStrLn "benchmark models 20110311sets"
+          putStrLn "models : Zp "
 
 	  let cmdSequence = do 
                 compileFortran
@@ -26,7 +26,7 @@ main = do putStrLn "benchmark models 20110302_1 sets"
                 generateEvents   
                 runHEP2LHE       
                 runHEPEVT2STDHEP 
-	        runPGS            
+               	runPGS            
                 runClean          
                 updateBanner     
                 cleanHepFiles
