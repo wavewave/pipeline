@@ -1,8 +1,8 @@
 #!/bin/bash
 
-LIBDIR=/home/wavewave/nfs/montecarlo/MG_ME_V4.4.44/pythia-pgs/libraries/PGS4/lib/
-PYTHIALIB=/home/wavewave/nfs/montecarlo/MG_ME_V4.4.44/pythia-pgs/libraries/pylib/lib/
-PDFLIB=/home/wavewave/nfs/montecarlo/MG_ME_V4.4.44/pythia-pgs/libraries/lhapdf/lib/
+LIBDIR=/Users/iankim/mac/montecarlo/MG_ME_V4.4.44/pythia-pgs/libraries/PGS4/lib/
+PYTHIALIB=/Users/iankim/mac/montecarlo/MG_ME_V4.4.44/pythia-pgs/libraries/pylib/lib/
+PDFLIB=/Users/iankim/mac/montecarlo/MG_ME_V4.4.44/pythia-pgs/libraries/lhapdf/lib/
 
 gfortran -c -m64 hepevt2stdhep.f
 gfortran -m64 -o hepevt2stdhep.iw hepevt2stdhep.o $LIBDIR/libpgslib.a $LIBDIR/libexthep.a  $LIBDIR/libstdhep.a $LIBDIR/libFmcfio.a $PYTHIALIB/libpythiaext.a   $LIBDIR/libtauola.a
