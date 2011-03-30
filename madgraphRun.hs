@@ -24,16 +24,16 @@ main = do putStrLn "benchmark models 20110315sets"
                 compileFortran
                 cardPrepare                      
                 generateEvents   
-                runHEP2LHE       
-                runHEPEVT2STDHEP 
-               	runPGS            
-                runClean          
-                updateBanner     
+--                runHEP2LHE       
+--                runHEPEVT2STDHEP 
+--               	runPGS            
+--                runClean          
+--                updateBanner     
                 cleanHepFiles
           
        
           -- create working directory (only once for each process)
-          mapM_ (createWorkDir my_ssetup) psetuplist
+--          mapM_ (createWorkDir my_ssetup) psetuplist
           sleep 2
           mapM_ (runReaderT cmdSequence) totaltasklist 
 
