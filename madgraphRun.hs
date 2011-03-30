@@ -13,27 +13,27 @@ import HEP.Automation.MadGraph.Run
 
 import System.Posix.Unistd (sleep)
 
-import HEP.Automation.MadGraph.Dataset.Set20110320set1
+import HEP.Automation.MadGraph.Dataset.Set20110315set1
 
 
 main :: IO ()
-main = do putStrLn "benchmark models 20110320sets"
-          putStrLn "models : Wp"
+main = do putStrLn "benchmark models 20110315sets"
+          putStrLn "models : Six"
 
 	  let cmdSequence = do 
                 compileFortran
                 cardPrepare                      
                 generateEvents   
---                runHEP2LHE       
---                runHEPEVT2STDHEP 
---               	runPGS            
---                runClean          
---                updateBanner     
+                runHEP2LHE       
+                runHEPEVT2STDHEP 
+               	runPGS            
+                runClean          
+                updateBanner     
                 cleanHepFiles
-                liftIO (sleep 5) 
+          
        
           -- create working directory (only once for each process)
---          mapM_ (createWorkDir my_ssetup) psetuplist
+          mapM_ (createWorkDir my_ssetup) psetuplist
           sleep 2
           mapM_ (runReaderT cmdSequence) totaltasklist 
 
