@@ -13,12 +13,13 @@ import HEP.Automation.MadGraph.Run
 
 import System.Posix.Unistd (sleep)
 
-import HEP.Automation.MadGraph.Dataset.Set20110315set1
+import HEP.Automation.MadGraph.Dataset.Desktop
+import HEP.Automation.MadGraph.Dataset.Set20110330set2
 
 
 main :: IO ()
-main = do putStrLn "benchmark models 20110315sets"
-          putStrLn "models : Six"
+main = do putStrLn "benchmark models 20110330sets"
+          putStrLn "models : TripFull"
 
 	  let cmdSequence = do 
                 compileFortran
