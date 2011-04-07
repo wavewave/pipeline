@@ -13,12 +13,12 @@ import HEP.Automation.MadGraph.Run
 
 import System.Posix.Unistd (sleep)
 
-import HEP.Automation.MadGraph.Dataset.SUSY
-import HEP.Automation.MadGraph.Dataset.Set20110407set2
+import HEP.Automation.MadGraph.Dataset.Desktop
+import HEP.Automation.MadGraph.Dataset.Set20110405set1
 
 
 main :: IO ()
-main = do putStrLn "benchmark models 20110407set2"
+main = do putStrLn "benchmark models 20110405sets"
           putStrLn "models : WpZpFull"
 
 	  let cmdSequence = do 
@@ -34,7 +34,7 @@ main = do putStrLn "benchmark models 20110407set2"
                 liftIO (sleep 5) 
        
           -- create working directory (only once for each process)
-          mapM_ (createWorkDir my_ssetup) psetuplist
+--          mapM_ (createWorkDir my_ssetup) psetuplist
           sleep 2
           mapM_ (runReaderT cmdSequence) totaltasklist 
 
