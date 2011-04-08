@@ -1,0 +1,24 @@
+Name:		pipeline
+Version:	0.0
+Synopsis:	pipeline for Monte Carlo run
+Description: 	pipeline for Monte Carlo run, 
+                it manages computing machine and processes.
+License: 	GPL-3
+License-file:	LICENSE
+Author:		Ian-Woo Kim
+Maintainer: 	Ian-Woo Kim <ianwookim@gmail.com>
+Build-Type: 	Simple
+Cabal-Version:  >= 1.2
+
+
+Library
+  hs-source-dirs: src
+  ghc-options: 	-Wall -O2 -threaded -funbox-strict-fields -fno-warn-unused-do-bind
+  ghc-prof-options: -caf-all -auto-all
+  Build-Depends: base>4, process, unix, directory, mtl>2, 
+                 madgraph-auto, madgraph-auto-dataset
+  Exposed-Modules: 
+                   HEP.Automation.Pipeline
+
+
+		 
