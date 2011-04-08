@@ -1,8 +1,8 @@
 #!/bin/bash
 
-LIBDIR=$mg4base$/pythia-pgs/libraries/PGS4/lib/
-PYTHIALIB=$mg4base$/pythia-pgs/libraries/pylib/lib/
-PDFLIB=$mg4base$/pythia-pgs/libraries/lhapdf/lib/
+LIBDIR=$mgfourbase$/pythia-pgs/libraries/PGS4/lib/
+PYTHIALIB=$mgfourbase$/pythia-pgs/libraries/pylib/lib/
+PDFLIB=$mgfourbase$/pythia-pgs/libraries/lhapdf/lib/
 
 gfortran -c -m64 hepevt2stdhep.f
 gfortran -m64 -o hepevt2stdhep.iw hepevt2stdhep.o $$LIBDIR/libpgslib.a $$LIBDIR/libexthep.a  $$LIBDIR/libstdhep.a $$LIBDIR/libFmcfio.a $$PYTHIALIB/libpythiaext.a   $$LIBDIR/libtauola.a
