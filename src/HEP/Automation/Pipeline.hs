@@ -34,7 +34,7 @@ pipeline confsys confusr command psetuplist tasklist = do
         Right (ssetup,csetup) -> do 
           putStrLn $ show (ssetup,csetup)
           -- create working directory (only once for each process)
---          mapM_ (createWorkDir ssetup) psetuplist
+          mapM_ (createWorkDir ssetup) psetuplist
           sleep 2
           mapM_ (runReaderT command) (tasklist ssetup csetup) 
         Left something -> do 
