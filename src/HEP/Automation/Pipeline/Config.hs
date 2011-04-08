@@ -6,51 +6,39 @@ import HEP.Automation.MadGraph.SetupType
 
 type ConfigParsec = Parsec String ()
 
-config :: ConfigParsec (ScriptSetup,ClusterSetup) 
-config = do 
-  scriptbase <- p_scriptbase  
-  mg5base    <- p_mg5base 
-  workbase   <- p_workbase
-  cluster    <- p_cluster 
-  return (SS scriptbase mg5base workbase, CS cluster)
+configSystem :: ConfigParsec (String -> String -> (ScriptSetup,ClusterSetup)) 
+configSystem = do 
+  mg5base     <- p_dir "mg5base"
+  workbase    <- p_dir "workbase"
+  cluster     <- p_cluster 
+  return (\x y -> (SS x y mg5base workbase, CS cluster))
 
-p_scriptbase :: ConfigParsec String
-p_scriptbase = do 
-  string "scriptbase"  
+configUser :: String 
+              -> (String->String-> (ScriptSetup,ClusterSetup)) 
+              -> ConfigParsec (ScriptSetup,ClusterSetup)
+configUser tmpldir f = do 
+  workingdir <- p_dir "workingdir"
+  return $ f tmpldir workingdir 
+  
+p_dir :: String -> ConfigParsec String              
+p_dir str = do              
+  string str 
   spaces
   char '=' 
   spaces
   str <- many1 (noneOf " \n")
+  many (char ' ')
   char '\n'
   return str
-
-p_mg5base :: ConfigParsec String
-p_mg5base = do
-  string "mg5base"  
-  spaces
-  char '=' 
-  spaces
-  str <- many1 (noneOf " \n")
-  char '\n'
-  return str
-
-p_workbase :: ConfigParsec String
-p_workbase = do
-  string "workbase"  
-  spaces
-  char '=' 
-  spaces
-  str <- many1 (noneOf " \n")
-  char '\n'
-  return str
-
+  
 p_cluster :: ConfigParsec ClusterRunType
 p_cluster = do 
   string "cluster"
   spaces 
   char '='
-  spaces 
+  spaces
   numstr <- many1 (digit)
+  many (char ' ')
   char '\n'
   let n = read numstr
   if n == 0 
