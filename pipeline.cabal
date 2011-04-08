@@ -17,7 +17,7 @@ data-files: template/*.f
             template/*.pbs.st
             template/*.dat
             template/*.inc
-            template/*.sh
+            template/*.sh.st
 
 Library
   hs-source-dirs: src
