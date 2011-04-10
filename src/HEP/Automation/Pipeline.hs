@@ -1,8 +1,6 @@
-{-# LANGUAGE PackageImports #-}
-
 module HEP.Automation.Pipeline where
 
-import "mtl" Control.Monad.Reader 
+import Control.Monad.Reader 
 
 import HEP.Automation.MadGraph.Run
 import HEP.Automation.MadGraph.Model
@@ -13,23 +11,31 @@ import System.FilePath ((</>))
 
 import Text.Parsec 
 import HEP.Automation.Pipeline.Config 
-import HEP.Automation.Pipeline.EventGeneration
 
 import Paths_pipeline
 
-pipeline  :: (Model a) => 
-             String                                           -- ^ system config  
-             -> String                                        -- ^ user config
-             -> WorkIO a ()                                   -- ^ command
-             -> [ProcessSetup a]                              -- ^ process setup list 
-             -> ( ScriptSetup -> ClusterSetup -> [WorkSetup a] )  -- ^ tasklist 
-             -> IO ()
-pipeline confsys confusr command psetuplist tasklist = do 
-  let sysresult = parse configSystem "" confsys
+pipelineLHCOAnal :: (Model a) => 
+                    String 
+                    -> String 
+                    -> WorkSetup a 
+                    -> IO () 
+pipelineLHCOAnal gconfig lconfig ws = do 
+  putStrLn "LHCAnalysis" 
+
+pipelineEvGen  :: (Model a) => 
+                  String              -- ^ system config  
+                  -> String           -- ^ user config
+                  -> WorkIO a ()      -- ^ command
+                  -> [ProcessSetup a] -- ^ process setup list 
+                  -> ( ScriptSetup -> ClusterSetup -> [WorkSetup a] )  
+                      -- ^ tasklist 
+                  -> IO ()
+pipelineEvGen confsys confusr command psetuplist tasklist = do 
+  let sysresult = parse configEvGenSystem "" confsys
   templdir <- return . ( </> "template" ) =<< getDataDir 
   case sysresult of 
     Right f -> do 
-      let usrresult = parse (configUser templdir f) "" confusr
+      let usrresult = parse (configEvGenUser templdir f) "" confusr
       case usrresult of 
         Right (ssetup,csetup) -> do 
           putStrLn $ show (ssetup,csetup)

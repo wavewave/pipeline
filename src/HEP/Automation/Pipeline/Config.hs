@@ -2,34 +2,39 @@ module HEP.Automation.Pipeline.Config where
 
 import Text.Parsec 
 import HEP.Automation.MadGraph.Cluster
-import HEP.Automation.MadGraph.SetupType
+import HEP.Automation.MadGraph.SetupType 
 
 type ConfigParsec = Parsec String ()
 
-configSystem :: ConfigParsec (String -> String -> (ScriptSetup,ClusterSetup)) 
-configSystem = do 
-  mg5base     <- p_dir "mg5base"
-  workbase    <- p_dir "workbase"
-  cluster     <- p_cluster 
-  return (\x y -> (SS x y mg5base workbase, CS cluster))
+configEvGenSystem :: ConfigParsec (String -> String -> (ScriptSetup,ClusterSetup)) 
+configEvGenSystem = do 
+  mg5  <- p_dir "mg5base"
+  work <- p_dir "workbase"
+  clu  <- p_cluster 
+  return (\x y -> (SS x y mg5 work, CS clu))
 
-configUser :: String 
-              -> (String->String-> (ScriptSetup,ClusterSetup)) 
-              -> ConfigParsec (ScriptSetup,ClusterSetup)
-configUser tmpldir f = do 
-  workingdir <- p_dir "workingdir"
-  return $ f tmpldir workingdir 
+configEvGenUser :: String 
+                   -> (String->String-> (ScriptSetup,ClusterSetup)) 
+                   -> ConfigParsec (ScriptSetup,ClusterSetup)
+configEvGenUser tmpldir f = do 
+  wdir <- p_dir "workingdir"
+  return $ f tmpldir wdir 
   
+-- configLHCAnalUser :: String -> ConfigParsec () 
+  
+
+
+
 p_dir :: String -> ConfigParsec String              
 p_dir str = do              
   string str 
   spaces
   char '=' 
   spaces
-  str <- many1 (noneOf " \n")
+  val <- many1 (noneOf " \n")
   many (char ' ')
   char '\n'
-  return str
+  return val
   
 p_cluster :: ConfigParsec ClusterRunType
 p_cluster = do 

@@ -1,12 +1,7 @@
 module HEP.Automation.Pipeline.WebDAV where
 
-import System.Directory
 import System.Process
-
 import System.FilePath 
-
-import Control.Monad
-
 
 data WebDAVConfig = WebDAVConfig {
         wget          :: String,
