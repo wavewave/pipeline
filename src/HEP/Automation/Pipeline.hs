@@ -13,7 +13,7 @@ import System.FilePath ((</>))
 
 import Text.Parsec 
 import HEP.Automation.Pipeline.Config 
-import HEP.Automation.Pipeline.Command 
+import HEP.Automation.Pipeline.EventGeneration
 
 import Paths_pipeline
 

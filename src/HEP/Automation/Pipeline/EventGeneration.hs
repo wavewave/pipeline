@@ -1,4 +1,4 @@
-module HEP.Automation.Pipeline.Command where
+module HEP.Automation.Pipeline.EventGeneration where
 
 import HEP.Automation.MadGraph.Model
 import HEP.Automation.MadGraph.Run
@@ -15,4 +15,4 @@ fullGeneration = do
   runClean         
   updateBanner     
   cleanHepFiles
---  liftIO (sleep 5) 
+
