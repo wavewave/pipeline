@@ -29,6 +29,7 @@ Library
   Exposed-Modules: 
                    HEP.Automation.Pipeline
                    HEP.Automation.Pipeline.Config
+                   HEP.Automation.Pipeline.FileRepository
                    HEP.Automation.Pipeline.EventGeneration 
                    HEP.Automation.Pipeline.DetectorAnalysis
                    HEP.Automation.Pipeline.WebDAV

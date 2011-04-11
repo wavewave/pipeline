@@ -5,21 +5,34 @@ import HEP.Automation.MadGraph.Model
 import HEP.Automation.MadGraph.SetupType
 
 import HEP.Automation.Pipeline.WebDAV
+import HEP.Automation.Pipeline.FileRepository
+
 
 import HEP.Parser.LHCOAnalysis
 
 import System.Directory 
 
+data AnalysisWorkConfig = AWConfig { 
+    anal_workdir :: FilePath
+  }
 
-fetchLHCOfromWorkSetup :: (Model a) => 
-                          WebDAVConfig 
-                          -> FilePath    -- ^ local directory 
-                          -> FilePath    -- ^ remote directory
-                          -> WorkSetup a -- ^ worksetup
-                          -> IO () 
-fetchLHCOfromWorkSetup wdav localdir remotedir ws = do 
-  let runname = makeRunName (ws_psetup ws) (ws_rsetup ws) 
-      lhcofilename = runname ++ "_pgs_events.lhco"
 
-  setCurrentDirectory localdir 
-  fetchFile wdav remotedir lhcofilename 
+download_LHCO :: (Model a) =>  
+                 WebDAVConfig 
+                 -> FileRepositoryInfo       
+                 -> FilePath 
+                 -> WorkSetup a 
+                 -> IO () 
+download_LHCO wdav finfo wdir ws = do  
+  let rname = makeRunName (ws_psetup ws) (ws_rsetup ws)
+      filename = rname ++ "_pgs_events.lhco"
+      dirname = filedir finfo
+  setCurrentDirectory wdir 
+  fetchFile wdav dirname filename  
+
+  
+xformLHCOtoBinary wdir ws = do 
+  let rname = makeRunName (ws_psetup ws) (ws_rsetup ws)
+      infile = rname ++ "_pgs_events.lhco"
+      outfile = rname ++ "_pgs_events.binary"
+  makebinary infile outfile 

@@ -15,14 +15,10 @@ import System.Directory
 import Text.Parsec 
 import HEP.Automation.Pipeline.Config 
 import HEP.Automation.Pipeline.WebDAV
+import HEP.Automation.Pipeline.DetectorAnalysis
+import HEP.Automation.Pipeline.FileRepository
 
 import Paths_pipeline
-
-data FileRepositoryInfo = FRInfo {filedir :: FilePath}
-data AnalysisWorkConfig = AWConfig { 
-    anal_workdir :: FilePath
-  }
-
 
 pipelineLHCOAnal :: (Model a) => 
                   String              -- ^ system config  
@@ -42,38 +38,13 @@ pipelineLHCOAnal confsys confusr tasklistf wdav finfo aconf = do
       putStrLn "LHCAnalysis" 
       let tasklist = tasklistf ssetup csetup 
           wdir = anal_workdir aconf 
-      forM_ tasklist $ \x->download_LHCO wdav finfo wdir x 
+      forM_ tasklist $ 
+        \x -> do 
+          download_LHCO wdav finfo wdir x 
+          xformLHCOtoBinary wdir x
       
       
-download_LHCO :: (Model a) =>  
-                 WebDAVConfig 
-                 -> FileRepositoryInfo       
-                 -> FilePath 
-                 -> WorkSetup a 
-                 -> IO () 
-download_LHCO wdav finfo wdir ws = do  
-  let rname = makeRunName (ws_psetup ws) (ws_rsetup ws)
-      filename = rname ++ "_pgs_events.lhco"
-      dirname = filedir finfo
-  setCurrentDirectory wdir 
-  fetchFile wdav dirname filename  
-       
-  
-parseConfig :: String 
-               -> String 
-               -> IO (Either String (ScriptSetup,ClusterSetup))
-parseConfig confsys confusr = do
-  let sysresult = parse configEvGenSystem "" confsys
-  templdir <- return . ( </> "template" ) =<< getDataDir 
-  case sysresult of 
-    Right f -> do 
-      let usrresult = parse (configEvGenUser templdir f) "" confusr
-      case usrresult of 
-        Right (ssetup,csetup) -> return (Right (ssetup,csetup))
-        Left errormsg -> return (Left (show errormsg))
-    Left errormsg -> do 
-      return (Left (show errormsg))
-        
+
 
 pipelineEvGen  :: (Model a) => 
                   String              -- ^ system config  

@@ -4,7 +4,27 @@ import Text.Parsec
 import HEP.Automation.MadGraph.Cluster
 import HEP.Automation.MadGraph.SetupType 
 
+import System.FilePath ((</>))
+import Paths_pipeline
+
 type ConfigParsec = Parsec String ()
+
+parseConfig :: String 
+               -> String 
+               -> IO (Either String (ScriptSetup,ClusterSetup))
+parseConfig confsys confusr = do
+  let sysresult = parse configEvGenSystem "" confsys
+  templdir <- return . ( </> "template" ) =<< getDataDir 
+  case sysresult of 
+    Right f -> do 
+      let usrresult = parse (configEvGenUser templdir f) "" confusr
+      case usrresult of 
+        Right (ssetup,csetup) -> return (Right (ssetup,csetup))
+        Left errormsg -> return (Left (show errormsg))
+    Left errormsg -> do 
+      return (Left (show errormsg))
+        
+
 
 configEvGenSystem :: ConfigParsec (String -> String -> (ScriptSetup,ClusterSetup)) 
 configEvGenSystem = do 
