@@ -20,6 +20,13 @@ import HEP.Automation.Pipeline.FileRepository
 
 import Paths_pipeline
 
+import qualified Data.ByteString.Lazy.Char8 as B 
+import qualified Data.Binary as Bi
+import qualified Data.Binary.Get as G
+-- import qualified Data.ListLike as LL 
+import qualified Data.Iteratee as Iter 
+
+
 pipelineLHCOAnal :: (Model a) => 
                   String              -- ^ system config  
                   -> String           -- ^ user config
@@ -42,8 +49,28 @@ pipelineLHCOAnal confsys confusr tasklistf wdav finfo aconf = do
         \x -> do 
           download_LHCO wdav finfo wdir x 
           xformLHCOtoBinary wdir x
-      
-      
+          lst <- makePhyEventClassifiedList wdir x 
+          r <- eventFeedToIteratee lst testcount 
+--               Iter.length `Iter.enumPair` iter_count_marker1000 
+          putStrLn $ show r
+          
+          
+--- new fetch function using iteratee 
+
+-- safeget
+{- 
+iterFetchItems :: (Bi.Binary a) => 
+                  Iter.Iteratee B.ByteString m [a]
+iterFetchItems = Iter.liftI (step [] ) 
+  where 
+    step acc (Iter.Chunk xs) 
+      | LL.null xs = Iter.icont (step acc) Nothing
+    step acc (Iter.Chunk xs) = 
+      let acc' = do 
+            result <- Bi.get 
+            return 
+  
+  -- undefined -- G.runGet onefetch       -}
 
 
 pipelineEvGen  :: (Model a) => 
