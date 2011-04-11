@@ -1,6 +1,6 @@
 Name:		pipeline
-Version:	0.0.2.0
-Synopsis:	pipeline for Monte Carlo run
+Version:	0.0.2.1
+Synopsis:	pipeline for Mone Carlo run
 Description: 	pipeline for Monte Carlo run, 
                 it manages computing machine and processes.
 License: 	GPL-3
@@ -36,6 +36,8 @@ Library
                    HEP.Automation.Pipeline.DetectorAnalysis
                    HEP.Automation.Pipeline.WebDAV
                    HEP.Automation.Pipeline.Mathematica
+  Other-Modules:   
+                   Paths_pipeline
 --                   Paths_pipeline
 
 		 
