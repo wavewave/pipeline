@@ -36,6 +36,6 @@ Library
                    HEP.Automation.Pipeline.DetectorAnalysis
                    HEP.Automation.Pipeline.WebDAV
                    HEP.Automation.Pipeline.Mathematica
-                   Paths_pipeline
+--                   Paths_pipeline
 
 		 
