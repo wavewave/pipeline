@@ -6,12 +6,13 @@ import HEP.Automation.MadGraph.SetupType
 
 
 data EventGenerationSwitch = EGS {
-    dirGenSwitch :: Bool
+    dirGenSwitch  :: Bool
   , usrDefinedCut :: Bool 
+  , cleanUp       :: Bool
   }
 
 fullGeneration :: (Model a) => EventGenerationSwitch -> WorkIO a () 
-fullGeneration (EGS _ usrdef) = do 
+fullGeneration (EGS _ usrdef cleanup) = do 
   compileFortran
   cardPrepare                      
   generateEvents   
@@ -23,5 +24,7 @@ fullGeneration (EGS _ usrdef) = do
       runClean         
       updateBanner     
     False -> return ()
-  cleanHepFiles
+  case cleanup of
+    True -> cleanHepFiles
+    False -> return ()
 
