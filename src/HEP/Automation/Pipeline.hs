@@ -16,6 +16,7 @@ import Text.Parsec
 import HEP.Automation.Pipeline.Config 
 import HEP.Automation.Pipeline.WebDAV
 import HEP.Automation.Pipeline.DetectorAnalysis
+import HEP.Automation.Pipeline.EventGeneration
 import HEP.Automation.Pipeline.FileRepository
 
 import Paths_pipeline
@@ -73,24 +74,28 @@ iterFetchItems = Iter.liftI (step [] )
   -- undefined -- G.runGet onefetch       -}
 
 
+
 pipelineEvGen  :: (Model a) => 
                   String              -- ^ system config  
                   -> String           -- ^ user config
-                  -> WorkIO a ()      -- ^ command
+                  -> EventGenerationSwitch 
+                  -> (EventGenerationSwitch -> WorkIO a ())      -- ^ command
                   -> [ProcessSetup a] -- ^ process setup list 
                   -> ( ScriptSetup -> ClusterSetup -> [WorkSetup a] )  
                       -- ^ tasklist gen function 
                   -> IO ()
-pipelineEvGen confsys confusr command psetuplist tasklistf = do 
+pipelineEvGen confsys confusr egs command psetuplist tasklistf = do 
   confresult <- parseConfig confsys confusr
   case confresult of 
     Left errormsg -> do 
       putStrLn errormsg
     Right (ssetup,csetup) -> do 
       -- create working directory (only once for each process)
-      mapM_ (createWorkDir ssetup) psetuplist
+      case dirGenSwitch egs of 
+        True -> mapM_ (createWorkDir ssetup) psetuplist
+        False -> return ()
       sleep 2
-      mapM_ (runReaderT command) (tasklistf ssetup csetup)
+      mapM_ (runReaderT (command egs)) (tasklistf ssetup csetup)
 
        
 
