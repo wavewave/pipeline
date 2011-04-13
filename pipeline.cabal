@@ -1,5 +1,5 @@
 Name:		pipeline
-Version:	0.0.3.2
+Version:	0.0.4.0
 Synopsis:	pipeline for Mone Carlo run
 Description: 	pipeline for Monte Carlo run, 
                 it manages computing machine and processes.
@@ -13,6 +13,7 @@ Cabal-Version:  >= 1.6
 data-files: template/*.f
             template/*.dat.st
             template/*.m.st
+            template/*.m
             template/*.f.st
             template/*.pbs.st
             template/*.dat
@@ -33,7 +34,7 @@ Library
                    HEP.Automation.Pipeline.Config
                    HEP.Automation.Pipeline.EventGeneration 
                    HEP.Automation.Pipeline.DetectorAnalysis
-                   HEP.Automation.Pipeline.Mathematica
+                   HEP.Automation.Pipeline.TopRecon
   Other-Modules:   
                    Paths_pipeline
 
