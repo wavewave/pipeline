@@ -5,8 +5,8 @@
 
 
 (* ::Input:: *)
-(*<<"TopInfoExport.m"*)
-
+<<"$TopInfoExportPkgFile$" (* "TopInfoExport.m" *)
+ 
 
 lheFile = "$lheFile$"; (* file extension must be .lhe or .lhe.gz *)
 bannerFile = "$bannerFile$"; (* file extension must be .txt *)

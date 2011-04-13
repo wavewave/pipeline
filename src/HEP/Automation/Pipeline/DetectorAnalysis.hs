@@ -58,20 +58,39 @@ testcount = mkSeqCuts testcuts count <+> count_marker 1000 0
 
 --testcount = (count <+> apply testcut count <+> iter_count_marker1000)
 
-
+download :: (Model a) => 
+            String
+            -> WebDAVConfig
+            -> FilePath
+            -> WorkSetup a 
+            -> IO ()
+download ext wdav wdir ws = do  
+  let rname = makeRunName (ws_psetup ws) (ws_rsetup ws)
+      filename = rname ++ ext
+  setCurrentDirectory wdir 
+  fetchFile wdav (ws_storage ws) filename  
 
 
 download_LHCO :: (Model a) =>  
                  WebDAVConfig 
-                 -> WebDAVRemoteDir
-                 -> FilePath 
-                 -> WorkSetup a 
-                 -> IO () 
-download_LHCO wdav rdir wdir ws = do  
-  let rname = makeRunName (ws_psetup ws) (ws_rsetup ws)
-      filename = rname ++ "_pgs_events.lhco"
-  setCurrentDirectory wdir 
-  fetchFile wdav rdir filename  
+              -> FilePath 
+              -> WorkSetup a 
+              -> IO () 
+download_LHCO = download "_pgs_events.lhco"
+
+download_PartonLHEGZ :: (Model a) =>  
+                        WebDAVConfig 
+                     -> FilePath 
+                     -> WorkSetup a 
+                     -> IO () 
+download_PartonLHEGZ = download "_unweighted_events.lhe.gz"
+
+download_BannerTXT :: (Model a) =>  
+                      WebDAVConfig 
+                   -> FilePath 
+                   -> WorkSetup a 
+                   -> IO () 
+download_BannerTXT = download "_banner.txt"
 
   
 xformLHCOtoBinary wdir ws = do 

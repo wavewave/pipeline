@@ -19,6 +19,7 @@ import HEP.Storage.WebDAV
 import HEP.Automation.Pipeline.Config 
 import HEP.Automation.Pipeline.DetectorAnalysis
 import HEP.Automation.Pipeline.EventGeneration
+import HEP.Automation.Pipeline.TopAFB
 
 
 import Paths_pipeline
@@ -29,6 +30,41 @@ import qualified Data.Binary.Get as G
 -- import qualified Data.ListLike as LL 
 import qualified Data.Iteratee as Iter 
 
+pipelineTopAFB :: (Model a) => 
+                  String   -- ^ system config
+                  -> String -- ^ user config 
+                  -> (ScriptSetup -> ClusterSetup -> [WorkSetup a] ) 
+                     -- ^ tasklistf 
+                  -> WebDAVConfig
+                  -> AnalysisWorkConfig 
+                  -> IO () 
+pipelineTopAFB confsys confusr tasklistf wdav aconf = do 
+  confresult <- parseConfig confsys confusr
+  case confresult of 
+    Left errormsg -> do 
+      putStrLn errormsg
+    Right (ssetup,csetup) -> do 
+      putStrLn "top afb" 
+      let tasklist = tasklistf ssetup csetup 
+          wdir = anal_workdir aconf 
+      templdir <- return . ( </> "template" ) =<< getDataDir 
+      forM_ tasklist $
+        \x -> do 
+          download_PartonLHEGZ wdav wdir x 
+          download_BannerTXT wdav wdir x 
+          let rname = makeRunName (ws_psetup x) (ws_rsetup x)
+              lhefilename = rname ++ "_unweighted_events.lhe.gz"
+              bannerfilename = rname ++ "_banner.txt"
+              exportfilename = rname ++ "_topinfo.dat"
+              afb = TopAFBSetup {
+                        afb_mainpkgfile = "mainTopInfoRoutine.m"
+                      , afb_topinfoexportpkgfile = "topInfoExport.m"
+                      , afb_lhefile = lhefilename
+                      , afb_bannerfile = bannerfilename
+                      , afb_exportfile = exportfilename 
+                      }
+          topAFBSetup afb templdir wdir 
+          topAFBRunMathematica afb wdir 
 
 pipelineLHCOAnal :: (Model a) => 
                   String              -- ^ system config  
@@ -50,7 +86,7 @@ pipelineLHCOAnal confsys confusr tasklistf wdav rdir aconf = do
           wdir = anal_workdir aconf 
       forM_ tasklist $ 
         \x -> do 
-          download_LHCO wdav rdir wdir x 
+          download_LHCO wdav wdir x 
           xformLHCOtoBinary wdir x
           lst <- makePhyEventClassifiedList wdir x 
           r <- eventFeedToIteratee lst testcount 

@@ -35,6 +35,7 @@ Library
                    HEP.Automation.Pipeline.EventGeneration 
                    HEP.Automation.Pipeline.DetectorAnalysis
                    HEP.Automation.Pipeline.TopRecon
+                   HEP.Automation.Pipeline.TopAFB
   Other-Modules:   
                    Paths_pipeline
 
