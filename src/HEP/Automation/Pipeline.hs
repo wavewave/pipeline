@@ -55,13 +55,15 @@ pipelineTopAFB confsys confusr tasklistf wdav aconf = do
           let rname = makeRunName (ws_psetup x) (ws_rsetup x)
               lhefilename = rname ++ "_unweighted_events.lhe.gz"
               bannerfilename = rname ++ "_banner.txt"
-              exportfilename = rname ++ "_topinfo.dat"
+              exportfilenameTopInfo = rname ++ "_topinfo.dat"
+              exportfilenameSuccintInfo = rname ++ "_succintinfo.dat"
               afb = TopAFBSetup {
                         afb_mainpkgfile = "mainTopInfoRoutine.m"
                       , afb_topinfoexportpkgfile = "topInfoExport.m"
                       , afb_lhefile = lhefilename
                       , afb_bannerfile = bannerfilename
-                      , afb_exportfile = exportfilename 
+                      , afb_exportfileTopInfo = exportfilenameTopInfo 
+                      , afb_exportfileSuccintInfo = exportfilenameSuccintInfo
                       }
           topAFBSetup afb templdir wdir 
           topAFBRunMathematica afb wdir 

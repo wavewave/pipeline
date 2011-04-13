@@ -21,7 +21,8 @@ data TopAFBSetup = TopAFBSetup {
     , afb_topinfoexportpkgfile :: FilePath
     , afb_lhefile              :: FilePath
     , afb_bannerfile           :: FilePath
-    , afb_exportfile           :: FilePath
+    , afb_exportfileTopInfo    :: FilePath
+    , afb_exportfileSuccintInfo :: FilePath
     } deriving (Show)
 
 topAFBSetup :: TopAFBSetup 
@@ -32,10 +33,11 @@ topAFBSetup afb templatedir workingdir = do
   templates <- directoryGroup templatedir
   let str = (renderTemplateGroup 
               templates
-              [ ("TopInfoExportPkgFile", afb_topinfoexportpkgfile afb)
-              , ("lheFile"             , afb_lhefile afb)
-              , ("bannerFile"          , afb_bannerfile afb)
-              , ("exportFile"          , afb_exportfile afb)
+              [ ("TopInfoExportPkgFile" , afb_topinfoexportpkgfile afb)
+              , ("lheFile"              , afb_lhefile afb)
+              , ("bannerFile"           , afb_bannerfile afb)
+              , ("exportFileTopInfo"    , afb_exportfileTopInfo afb)
+              , ("exportFileSuccintInfo", afb_exportfileSuccintInfo afb)
               ] 
               (afb_mainpkgfile afb)) ++ "\n\n\n" 
 
@@ -62,7 +64,7 @@ topAFBRunMathematica afb wdir = do
   
   outstr <- readProcess "/Applications/Mathematica.app/Contents/MacOS/MathKernel" [ ] pkgstr 
   
-  writeFile (wdir </> (afb_exportfile afb ++ ".log")) outstr
+  writeFile (wdir </> (afb_exportfileTopInfo afb ++ ".log")) outstr
 
 
 {-

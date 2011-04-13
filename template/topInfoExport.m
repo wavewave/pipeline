@@ -187,7 +187,79 @@ n= ToExpression[First[ StringTake[StringCases[s,"All included subprocesses    I"
 
 
 (* ::Section:: *)
+(*top info functions*)
+
+
+passedevts[\[Eta]t_,\[Eta]tbar_][{{xsec_,numevts_},topinfo_}]:=Length[Cases[topinfo,{{etat_,rapt_,pTt_,vtt_},{etatb_,raptb_,pTtb_,vttb_},mtt_}/;And[Abs[etat]<\[Eta]t,Abs[etatb]<\[Eta]tbar]]]
+
+
+efficiency[\[Eta]t_,\[Eta]tbar_][{{xsec_,numevts_},topinfo_}]:=passedevts[\[Eta]t,\[Eta]tbar][{{xsec,numevts},topinfo}]/numevts//N
+
+
+smeff1 = 0.5487;
+smeff2 = 0.5532;
+
+
+efffactor[{{xsec_,numevts_},topinfo_}]:=1/2 (efficiency[2.4,1][{{xsec,numevts},topinfo}]/smeff1+efficiency[1,2.4][{{xsec,numevts},topinfo}]/smeff2)
+
+
+afb[list_]:= Module[{l,f,b},
+
+If[OddQ[Length[list]],Abort[]];
+
+l=Length[list];
+
+f=Take[list,-l/2];
+b=Reverse[Take[list,l/2]];
+
+(f-b)/(f+b)
+
+]
+
+
+afbpair[list_]:= Module[{l,f,b},
+
+If[OddQ[Length[list]],Abort[]];
+
+l=Length[list];
+
+f=Take[list,-l/2];
+b=Reverse[Take[list,l/2]];
+
+{(f-b)/(f+b),f+b}
+
+]
+
+
+afberror[{afb_,fplusb_}]:=ToString[afb]<>"\[PlusMinus]"<>ToString[Sqrt[1-afb^2]/Sqrt[fplusb]]
+
+
+ybins = {-\[Infinity],0,\[Infinity]};
+mbins = {0,450,\[Infinity]};
+
+
+rawAFBpair[{{xsec_,numevts_},topinfo_}]:=Flatten/@(afbpair/@CMFrameBinData[ybins,mbins][topinfo])//N
+
+
+afbWithError[{{xsec_,numevts_},topinfo_}] := afberror/@rawAFBpair[{{xsec,numevts},topinfo}]
+
+
+succinctinfo[{{xsec_,numevts_},topinfo_}]:={xsec,numevts,efffactor[{{xsec,numevts},topinfo}],rawAFBpair[{{xsec,numevts},topinfo}]}
+
+
+(* ::Section:: *)
 (*export function*)
 
 
 exportTopInfo[importfile_,bannerfile_][exportfile_]:=Export[exportfile,{getWeightAndNumEvtsFromTXT[Import[bannerfile]],extractTopInfoLHE/@getLHEdata[importfile]}]
+
+
+exportTopInfo2[importfile_,bannerfile_][exportfile1_,exportfile2_]:=Module[{info},
+
+info = {getWeightAndNumEvtsFromTXT[Import[bannerfile]],extractTopInfoLHE/@getLHEdata[importfile]};
+
+Export[exportfile1,info];
+Export[exportfile2,succinctinfo[info]];
+
+Remove[info]
+]
