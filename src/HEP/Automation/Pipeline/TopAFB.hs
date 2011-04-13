@@ -1,5 +1,6 @@
 module HEP.Automation.Pipeline.TopAFB where
 
+import System.IO
 import System.Directory
 import System.Process
 import System.FilePath ((</>))
@@ -52,12 +53,16 @@ topAFBRunMathematica afb wdir = do
   setCurrentDirectory wdir 
   checkFile (wdir </> afb_mainpkgfile afb) 5
   checkFile (wdir </> afb_topinfoexportpkgfile afb) 5
-  runCommand $
-    "/Applications/Mathematica.app/Contents/MacOS/MathKernel < " ++ afb_mainpkgfile afb ++ " > " ++ afb_exportfile afb ++ ".log"
-  return ()
---  pkgstr <- readFile (wdir </> afb_mainpkgfile afb)
---  outstr <- readProcess "math" [ ] pkgstr 
---  writeFile (wdir </> (afb_exportfile afb ++ ".log")) outstr
+--  runCommand $
+--    "/Applications/Mathematica.app/Contents/MacOS/MathKernel < " ++ afb_mainpkgfile afb ++ " > " ++ afb_exportfile afb ++ ".log"
+--  return ()
+  h_pkgstr <- openFile (wdir </> afb_mainpkgfile afb) ReadMode 
+  pkgstr <- hGetContents h_pkgstr
+--   hFlush h_pkgstr
+  
+  outstr <- readProcess "/Applications/Mathematica.app/Contents/MacOS/MathKernel" [ ] pkgstr 
+  
+  writeFile (wdir </> (afb_exportfile afb ++ ".log")) outstr
 
 
 {-
