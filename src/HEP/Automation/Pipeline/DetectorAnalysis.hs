@@ -6,9 +6,7 @@ import HEP.Automation.MadGraph.Util
 import HEP.Automation.MadGraph.Model
 import HEP.Automation.MadGraph.SetupType
 
-import HEP.Automation.Pipeline.WebDAV
-import HEP.Automation.Pipeline.FileRepository
-
+import HEP.Storage.WebDAV
 
 import HEP.Parser.LHCOAnalysis
 import HEP.Parser.LHCOAnalysis.Cuts
@@ -65,16 +63,15 @@ testcount = mkSeqCuts testcuts count <+> count_marker 1000 0
 
 download_LHCO :: (Model a) =>  
                  WebDAVConfig 
-                 -> FileRepositoryInfo       
+                 -> WebDAVRemoteDir
                  -> FilePath 
                  -> WorkSetup a 
                  -> IO () 
-download_LHCO wdav finfo wdir ws = do  
+download_LHCO wdav rdir wdir ws = do  
   let rname = makeRunName (ws_psetup ws) (ws_rsetup ws)
       filename = rname ++ "_pgs_events.lhco"
-      dirname = filedir finfo
   setCurrentDirectory wdir 
-  fetchFile wdav dirname filename  
+  fetchFile wdav rdir filename  
 
   
 xformLHCOtoBinary wdir ws = do 

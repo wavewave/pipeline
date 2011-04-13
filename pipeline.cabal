@@ -25,16 +25,14 @@ Library
   ghc-prof-options: -caf-all -auto-all
   Build-Depends: base>4, process, unix, directory, mtl>2, 
                  madgraph-auto > 0.3.6,  parsec>3, filepath,
-                 LHCOAnalysis-type, LHCOAnalysis >0.5, 
+                 LHCOAnalysis-type, LHCOAnalysis >0.5, webdav-manager,
                  iteratee, iteratee-util > 0.0.2, binary, bytestring,
                  HStringTemplate, HStringTemplateHelpersIW
   Exposed-Modules: 
                    HEP.Automation.Pipeline
                    HEP.Automation.Pipeline.Config
-                   HEP.Automation.Pipeline.FileRepository
                    HEP.Automation.Pipeline.EventGeneration 
                    HEP.Automation.Pipeline.DetectorAnalysis
---                   HEP.Automation.Pipeline.WebDAV
                    HEP.Automation.Pipeline.Mathematica
   Other-Modules:   
                    Paths_pipeline

@@ -13,11 +13,13 @@ import System.FilePath ((</>))
 import System.Directory
 
 import Text.Parsec 
+
+import HEP.Storage.WebDAV
+
 import HEP.Automation.Pipeline.Config 
-import HEP.Automation.Pipeline.WebDAV
 import HEP.Automation.Pipeline.DetectorAnalysis
 import HEP.Automation.Pipeline.EventGeneration
-import HEP.Automation.Pipeline.FileRepository
+
 
 import Paths_pipeline
 
@@ -34,10 +36,10 @@ pipelineLHCOAnal :: (Model a) =>
                   -> ( ScriptSetup -> ClusterSetup -> [WorkSetup a] )  
                       -- ^ tasklist 
                   -> WebDAVConfig
-                  -> FileRepositoryInfo
+                  -> WebDAVRemoteDir
                   -> AnalysisWorkConfig 
                   -> IO ()
-pipelineLHCOAnal confsys confusr tasklistf wdav finfo aconf = do 
+pipelineLHCOAnal confsys confusr tasklistf wdav rdir aconf = do 
   confresult <- parseConfig confsys confusr
   case confresult of 
     Left errormsg -> do 
@@ -48,7 +50,7 @@ pipelineLHCOAnal confsys confusr tasklistf wdav finfo aconf = do
           wdir = anal_workdir aconf 
       forM_ tasklist $ 
         \x -> do 
-          download_LHCO wdav finfo wdir x 
+          download_LHCO wdav rdir wdir x 
           xformLHCOtoBinary wdir x
           lst <- makePhyEventClassifiedList wdir x 
           r <- eventFeedToIteratee lst testcount 
