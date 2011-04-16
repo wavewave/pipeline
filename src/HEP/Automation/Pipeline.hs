@@ -96,23 +96,6 @@ pipelineLHCOAnal confsys confusr tasklistf wdav rdir aconf = do
           putStrLn $ show r
           
           
---- new fetch function using iteratee 
-
--- safeget
-{- 
-iterFetchItems :: (Bi.Binary a) => 
-                  Iter.Iteratee B.ByteString m [a]
-iterFetchItems = Iter.liftI (step [] ) 
-  where 
-    step acc (Iter.Chunk xs) 
-      | LL.null xs = Iter.icont (step acc) Nothing
-    step acc (Iter.Chunk xs) = 
-      let acc' = do 
-            result <- Bi.get 
-            return 
-  
-  -- undefined -- G.runGet onefetch       -}
-
 
 
 pipelineEvGen  :: (Model a) => 
