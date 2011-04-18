@@ -22,6 +22,8 @@ import HEP.Automation.Pipeline.EventGeneration
 import HEP.Automation.Pipeline.TopAFB
 
 
+import HEP.Automation.Pipeline.Download
+
 import Paths_pipeline
 
 import qualified Data.ByteString.Lazy.Char8 as B 
@@ -114,6 +116,8 @@ pipelineEvGen confsys confusr egs command psetuplist tasklistf = do
       putStrLn errormsg
     Right (ssetup,csetup) -> do 
       -- create working directory (only once for each process)
+
+--      putStrLn . show $ tasklistf ssetup csetup 
       case dirGenSwitch egs of 
         True -> mapM_ (createWorkDir ssetup) psetuplist
         False -> return ()
