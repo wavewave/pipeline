@@ -34,16 +34,10 @@ import qualified Data.Binary.Get as G
 -- import qualified Data.ListLike as LL 
 import qualified Data.Iteratee as Iter 
 
+import HEP.Parser.LHEParser
 
 
-pipelineGen :: (Model a) => 
-               (WebDAVConfig -> WorkSetup a -> IO ())
-            -> WebDAVConfig
-            -> String   -- ^ system config
-            -> String -- ^ user config 
-            -> (ScriptSetup -> ClusterSetup -> [WorkSetup a] ) 
-            -- ^ tasklistf 
-            -> IO () 
+pipelineGen :: (Model a) => PipelineSingleWork a -> PipelineWork a 
 pipelineGen work wdav confsys confusr tasklistf   = do
   confresult <- parseConfig confsys confusr
   case confresult of 
@@ -55,8 +49,8 @@ pipelineGen work wdav confsys confusr tasklistf   = do
       templdir <- return . ( </> "template" ) =<< getDataDir 
       forM_ tasklist (work wdav)
              
-pipelineLHE :: (Model a) => PipelineWork a
-pipelineLHE  = pipelineGen testLHE  
+pipelineLHE :: (Model a) => (LHEvent -> IO ()) -> PipelineWork a
+pipelineLHE analysis = pipelineGen (testLHE analysis)  
 
 
 
@@ -80,8 +74,8 @@ pipelineTopAFB confsys confusr tasklistf wdav aconf = do
       templdir <- return . ( </> "template" ) =<< getDataDir 
       forM_ tasklist $
         \x -> do 
-          download_PartonLHEGZ wdav wdir x 
-          download_BannerTXT wdav wdir x 
+          download_PartonLHEGZ wdir wdav x 
+          download_BannerTXT wdir wdav x 
           let rname = makeRunName (ws_psetup x) (ws_rsetup x)
               lhefilename = rname ++ "_unweighted_events.lhe.gz"
               bannerfilename = rname ++ "_banner.txt"
@@ -118,7 +112,7 @@ pipelineLHCOAnal confsys confusr tasklistf wdav rdir aconf = do
           wdir = anal_workdir aconf 
       forM_ tasklist $ 
         \x -> do 
-          download_LHCO wdav wdir x 
+          download_LHCO wdir wdav x 
           xformLHCOtoBinary wdir x
           lst <- makePhyEventClassifiedList wdir x 
           r <- eventFeedToIteratee lst testcount 
