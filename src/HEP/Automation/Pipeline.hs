@@ -20,6 +20,7 @@ import HEP.Automation.Pipeline.Config
 import HEP.Automation.Pipeline.DetectorAnalysis
 import HEP.Automation.Pipeline.EventGeneration
 import HEP.Automation.Pipeline.TopAFB
+import HEP.Automation.Pipeline.PartonLevelAnalysis
 
 
 import HEP.Automation.Pipeline.Download
@@ -31,6 +32,37 @@ import qualified Data.Binary as Bi
 import qualified Data.Binary.Get as G
 -- import qualified Data.ListLike as LL 
 import qualified Data.Iteratee as Iter 
+
+type PipelineWork a = WebDAVConfig
+                    -> String   -- ^ system config
+                    -> String -- ^ user config 
+                    -> (ScriptSetup -> ClusterSetup -> [WorkSetup a] ) 
+                    -> IO ()
+
+
+pipelineGen :: (Model a) => 
+               (WebDAVConfig -> WorkSetup a -> IO ())
+            -> WebDAVConfig
+            -> String   -- ^ system config
+            -> String -- ^ user config 
+            -> (ScriptSetup -> ClusterSetup -> [WorkSetup a] ) 
+            -- ^ tasklistf 
+            -> IO () 
+pipelineGen work wdav confsys confusr tasklistf   = do
+  confresult <- parseConfig confsys confusr
+  case confresult of 
+    Left errormsg -> do 
+      putStrLn errormsg
+    Right (ssetup,csetup) -> do 
+      putStrLn "top afb" 
+      let tasklist = tasklistf ssetup csetup 
+      templdir <- return . ( </> "template" ) =<< getDataDir 
+      forM_ tasklist (work wdav)
+             
+pipelineLHE :: (Model a) => PipelineWork a
+pipelineLHE  = pipelineGen testLHE  
+
+
 
 pipelineTopAFB :: (Model a) => 
                   String   -- ^ system config
