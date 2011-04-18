@@ -31,6 +31,7 @@ Library
                  HStringTemplate, HStringTemplateHelpersIW
   Exposed-Modules: 
                    HEP.Automation.Pipeline
+                   HEP.Automation.Pipeline.Type
                    HEP.Automation.Pipeline.Config
                    HEP.Automation.Pipeline.Download
                    HEP.Automation.Pipeline.EventGeneration 

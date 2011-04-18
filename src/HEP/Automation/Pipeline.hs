@@ -16,6 +16,7 @@ import Text.Parsec
 
 import HEP.Storage.WebDAV
 
+import HEP.Automation.Pipeline.Type
 import HEP.Automation.Pipeline.Config 
 import HEP.Automation.Pipeline.DetectorAnalysis
 import HEP.Automation.Pipeline.EventGeneration
@@ -33,11 +34,6 @@ import qualified Data.Binary.Get as G
 -- import qualified Data.ListLike as LL 
 import qualified Data.Iteratee as Iter 
 
-type PipelineWork a = WebDAVConfig
-                    -> String   -- ^ system config
-                    -> String -- ^ user config 
-                    -> (ScriptSetup -> ClusterSetup -> [WorkSetup a] ) 
-                    -> IO ()
 
 
 pipelineGen :: (Model a) => 
