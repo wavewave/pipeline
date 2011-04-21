@@ -196,11 +196,11 @@ passedevts[\[Eta]t_,\[Eta]tbar_][{{xsec_,numevts_},topinfo_}]:=Length[Cases[topi
 efficiency[\[Eta]t_,\[Eta]tbar_][{{xsec_,numevts_},topinfo_}]:=passedevts[\[Eta]t,\[Eta]tbar][{{xsec,numevts},topinfo}]/numevts//N
 
 
-smeff1 = 0.5487;
-smeff2 = 0.5532;
+smeff1 = 0.529;
+smeff2 = 0.5364;
 
 
-efffactor[{{xsec_,numevts_},topinfo_}]:=1/2 (efficiency[2.4,1][{{xsec,numevts},topinfo}]/smeff1+efficiency[1,2.4][{{xsec,numevts},topinfo}]/smeff2)
+efffactor[{{xsec_,numevts_},topinfo_}]:=1/2 (efficiency[2,1][{{xsec,numevts},topinfo}]/smeff1+efficiency[1,2][{{xsec,numevts},topinfo}]/smeff2)
 
 
 afb[list_]:= Module[{l,f,b},
@@ -235,16 +235,26 @@ afberror[{afb_,fplusb_}]:=ToString[afb]<>"\[PlusMinus]"<>ToString[Sqrt[1-afb^2]/
 
 
 ybins = {-\[Infinity],0,\[Infinity]};
+ybins2 = {-\[Infinity],-1,0,1,\[Infinity]};
 mbins = {0,450,\[Infinity]};
 
 
-rawAFBpair[{{xsec_,numevts_},topinfo_}]:=Flatten/@(afbpair/@CMFrameBinData[ybins,mbins][topinfo])//N
+rawAFBdm[{{xsec_,numevts_},topinfo_}]:=Flatten/@(afbpair/@CMFrameBinData[ybins,mbins][topinfo])//N
 
 
-afbWithError[{{xsec_,numevts_},topinfo_}] := afberror/@rawAFBpair[{{xsec,numevts},topinfo}]
+effAFBdm[eta1_,eta2_][{{xsec_,numevts_},topinfo_}]:=Flatten/@(1/2 (afbpair/@CMFrameBinData[ybins,mbins][cutInfo[eta1,eta2][topinfo]]+afbpair/@CMFrameBinData[ybins,mbins][cutInfo[eta2,eta1][topinfo]]))//N
+
+
+rawAFBdy[{{xsec_,numevts_},topinfo_}]:=Transpose[First[(afbpair/@CMFrameBinData[ybins2,{0,\[Infinity]}][topinfo])]]//N
+
+
+effAFBdy[eta1_,eta2_][{{xsec_,numevts_},topinfo_}]:=Transpose[First[(1/2 (afbpair/@CMFrameBinData[ybins2,{0,\[Infinity]}][cutInfo[eta1,eta2][topinfo]]+afbpair/@CMFrameBinData[ybins2,{0,\[Infinity]}][cutInfo[eta2,eta1][topinfo]]))]]//N
 
 
 succinctinfo[{{xsec_,numevts_},topinfo_}]:={xsec,numevts,efffactor[{{xsec,numevts},topinfo}],rawAFBpair[{{xsec,numevts},topinfo}]}
+
+
+succinctinfo2[{{xsec_,numevts_},topinfo_}]:={xsec,numevts,efffactor[{{xsec,numevts},topinfo}],rawAFBdm[{{xsec,numevts},topinfo}],effAFBdm[1,2][{{xsec,numevts},topinfo}],rawAFBdy[{{xsec,numevts},topinfo}],effAFBdy[1,2][{{xsec,numevts},topinfo}]}
 
 
 (* ::Section:: *)
@@ -260,6 +270,17 @@ info = {getWeightAndNumEvtsFromTXT[Import[bannerfile]],extractTopInfoLHE/@getLHE
 
 Export[exportfile1,info];
 Export[exportfile2,succinctinfo[info]];
+
+Remove[info]
+]
+
+
+exportTopInfo3[importfile_,bannerfile_][exportfile1_,exportfile2_]:=Module[{info},
+
+info = {getWeightAndNumEvtsFromTXT[Import[bannerfile]],extractTopInfoLHE/@getLHEdata[importfile]};
+
+Export[exportfile1,info];
+Export[exportfile2,succinctinfo2[info]];
 
 Remove[info]
 ]

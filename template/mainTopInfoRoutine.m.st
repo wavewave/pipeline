@@ -4,7 +4,7 @@
 (*main routine*)
 
 
-<<"$TopInfoExportPkgFile$"
+<<"$TopInfoExportPkgFile$" (* "TopInfoExport.m" *)
 
 
 lheFile = "$lheFile$"; (* file extension must be .lhe or .lhe.gz *)
@@ -13,4 +13,4 @@ exportFile1 = "$exportFileTopInfo$"; (* file extension should be ..._topinfo.dat
 exportFile2 = "$exportFileSuccintInfo$"; (* file extension must be ..._succinctinfo.dat *)
 
 
-exportTopInfo2[lheFile,bannerFile][exportFile1,exportFile2]
+exportTopInfo3[lheFile,bannerFile][exportFile1,exportFile2]

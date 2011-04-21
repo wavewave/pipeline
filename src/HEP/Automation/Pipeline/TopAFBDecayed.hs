@@ -1,4 +1,4 @@
-module HEP.Automation.Pipeline.TopAFB where
+module HEP.Automation.Pipeline.TopAFBDecayed where
 
 import System.IO
 import System.Directory
@@ -13,77 +13,87 @@ import HEP.Storage.WebDAV
 import HEP.Automation.MadGraph.SetupType
 import HEP.Automation.MadGraph.Run
 import HEP.Automation.MadGraph.Util
+import HEP.Automation.MadGraph.Model 
+
+import HEP.Automation.Pipeline.Type
+import HEP.Automation.Pipeline.Download
+import HEP.Automation.Pipeline.DetectorAnalysis
+
+
 
 import Paths_pipeline
 
-data TopAFBSetup = TopAFBSetup { 
-      afb_mainpkgfile          :: FilePath
-    , afb_topinfoexportpkgfile :: FilePath
-    , afb_lhefile              :: FilePath
-    , afb_bannerfile           :: FilePath
-    , afb_exportfileTopInfo    :: FilePath
-    , afb_exportfileSuccintInfo :: FilePath
+data TopAFBDecayedSetup = TopAFBDecayedSetup { 
+      afbd_mainPkgFile                     :: FilePath
+    , afbd_lheLepJetCuttingFunctionPkgFile :: FilePath
+    , afbd_lheFile                         :: FilePath
+    , afbd_bannerFile                      :: FilePath
+    , afbd_exportFileOne                   :: FilePath
+    , afbd_exportFileTwo                   :: FilePath
+    , afbd_exportFileThree                 :: FilePath
     } deriving (Show)
 
-topAFBSetup :: TopAFBSetup 
-            -> FilePath      -- ^ Template Path
-            -> FilePath      -- ^ Working Directory
-            -> IO () 
-topAFBSetup afb templatedir workingdir = do 
+topAFBDecayedSetup :: TopAFBDecayedSetup 
+                   -> FilePath      -- ^ Template Path
+                   -> FilePath      -- ^ Working Directory
+                   -> IO () 
+topAFBDecayedSetup afb templatedir workingdir = do 
   templates <- directoryGroup templatedir
   let str = (renderTemplateGroup 
               templates
-              [ ("TopInfoExportPkgFile" , afb_topinfoexportpkgfile afb)
-              , ("lheFile"              , afb_lhefile afb)
-              , ("bannerFile"           , afb_bannerfile afb)
-              , ("exportFileTopInfo"    , afb_exportfileTopInfo afb)
-              , ("exportFileSuccintInfo", afb_exportfileSuccintInfo afb)
+              [ ("lheLepJetCuttingFunctionPkgFile" , afbd_lheLepJetCuttingFunctionPkgFile afb)
+              , ("lheFile"                         , afbd_lheFile afb)
+              , ("bannerFile"                      , afbd_bannerFile afb)
+              , ("exportFileOne"                   , afbd_exportFileOne afb)
+              , ("exportFileTwo"                   , afbd_exportFileTwo  afb)
+              , ("exportFileThree"                 , afbd_exportFileThree  afb)
               ] 
-              (afb_mainpkgfile afb)) ++ "\n\n\n" 
+              (afbd_mainPkgFile afb)) ++ "\n\n\n" 
 
-  copyFile (templatedir </> afb_topinfoexportpkgfile afb) 
-           (workingdir </> afb_topinfoexportpkgfile afb)
+  copyFile (templatedir </> afbd_lheLepJetCuttingFunctionPkgFile afb) 
+           (workingdir </> afbd_lheLepJetCuttingFunctionPkgFile afb)
   
-  existThenRemove (workingdir </> afb_mainpkgfile afb)
-  writeFile (workingdir </> afb_mainpkgfile afb) str  
+  existThenRemove (workingdir </> afbd_mainPkgFile afb)
+  writeFile (workingdir </> afbd_mainPkgFile afb) str  
   return () 
 
-topAFBRunMathematica :: TopAFBSetup
-                     -> FilePath      -- ^ Working Directory
-                     -> IO () 
-topAFBRunMathematica afb wdir = do
+topAFBDecayedRunMathematica :: TopAFBDecayedSetup
+                            -> FilePath      -- ^ Working Directory
+                            -> IO () 
+topAFBDecayedRunMathematica afb wdir = do
   setCurrentDirectory wdir 
-  checkFile (wdir </> afb_mainpkgfile afb) 5
-  checkFile (wdir </> afb_topinfoexportpkgfile afb) 5
---  runCommand $
---    "/Applications/Mathematica.app/Contents/MacOS/MathKernel < " ++ afb_mainpkgfile afb ++ " > " ++ afb_exportfile afb ++ ".log"
---  return ()
-  h_pkgstr <- openFile (wdir </> afb_mainpkgfile afb) ReadMode 
+  checkFile (wdir </> afbd_mainPkgFile afb) 5
+  checkFile (wdir </> afbd_lheLepJetCuttingFunctionPkgFile afb) 5
+  h_pkgstr <- openFile (wdir </> afbd_mainPkgFile afb) ReadMode 
   pkgstr <- hGetContents h_pkgstr
---   hFlush h_pkgstr
-  
   outstr <- readProcess "/Applications/Mathematica.app/Contents/MacOS/MathKernel" [ ] pkgstr 
-  
-  writeFile (wdir </> (afb_exportfileTopInfo afb ++ ".log")) outstr
+  writeFile (wdir </> (afbd_exportFileOne afb ++ ".log")) outstr
 
 
-{-
-topreconSendBatch :: TopReconSetup -> FilePath -> FilePath -> IO () 
-topreconSendBatch ts tp workdir = do 
-  topreconSetup ts tp 
-  existThenRemove (tr_pbsfile ts) 
+data AnalysisType = DoubleTop | SingleTop 
 
-  templates <- directoryGroup tp 
-  let str = (renderTemplateGroup 
-              templates
-              [ ("mfile"        , (tr_mfile ts ))
-              , ("workdir"      , workdir)
-              , ("ofile"        , (tr_ofile ts ))
-              ] 
-              "tev_top_reco_IW.pbs") ++ "\n\n\n" 
-  writeFile (tr_pbsfile ts) str 
---  sleep 2 
-  readProcess "qsub" [tr_pbsfile ts] "" 
-  return () 
+topAFBDecayedMathematicaDriver :: (Model a) => AnalysisWorkConfig -> AnalysisType -> PipelineSingleWork a 
+topAFBDecayedMathematicaDriver aconf atype wdav ws = do
+  let wdir = anal_workdir aconf
+  download_PartonLHEGZ wdir wdav ws
+  download_BannerTXT wdir wdav ws
+  templdir <- return . ( </> "template" ) =<< getDataDir  
 
--}
+  let rname = makeRunName (ws_psetup ws) (ws_rsetup ws)
+      lhefilename = rname ++ "_unweighted_events.lhe.gz"
+      bannerfilename = rname ++ "_banner.txt"
+      exportfilenameTopInfo = rname ++ "_topinfo.dat"
+      exportfilenameSuccintInfo = rname ++ "_succintinfo.dat"
+      afb = TopAFBDecayedSetup {
+               afbd_mainPkgFile = "mainTopInfoRoutine.m"
+             , afbd_lheLepJetCuttingFunctionPkgFile = case atype of 
+                                                        DoubleTop -> "mainDecayedTopInfoRoutine.m"
+                                                        SingleTop -> "mainDecayedSingleTopInfoRoutine.m"
+             , afbd_lheFile         = rname ++ "_unweighted_events.lhe.gz"
+             , afbd_bannerFile      = rname ++ "_banner.txt" 
+             , afbd_exportFileOne   = rname ++ "_uncuttopinfo.dat"
+             , afbd_exportFileTwo   = rname ++ "_cuttopinfo.dat"
+             , afbd_exportFileThree = rname ++ "_bininfo.dat" 
+             }
+  topAFBDecayedSetup afb templdir wdir 
+  topAFBDecayedRunMathematica afb wdir 

@@ -4,7 +4,7 @@
 (*main routine*)
 
 
-<<"lhe_lepjet_cutting_functions.m"
+<<"$lheLepJetCuttingFunctionPkgFile$" (* "lhe_lepjet_cutting_functions.m" *)
 
 
 lheFile = "$lheFile$"; (* file extension must be .lhe or .lhe.gz *)

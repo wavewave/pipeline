@@ -1,5 +1,5 @@
 Name:		pipeline
-Version:	0.1.0.1
+Version:	0.1.0.0
 Synopsis:	pipeline for Mone Carlo run
 Description: 	pipeline for Monte Carlo run, 
                 it manages computing machine and processes.
@@ -40,6 +40,7 @@ Library
                    HEP.Automation.Pipeline.DetectorAnalysis
                    HEP.Automation.Pipeline.TopRecon
                    HEP.Automation.Pipeline.TopAFB
+                   HEP.Automation.Pipeline.TopAFBDecayed
                    HEP.Automation.Pipeline.PartonLevelAnalysis
   Other-Modules:   
                    Paths_pipeline
