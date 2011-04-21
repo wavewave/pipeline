@@ -40,6 +40,9 @@ upload ext ldir wdav ws = do
 upload_PartonLHEGZ :: (Model a) => PipelineSingleWork a 
 upload_PartonLHEGZ wdav ws = upload "_unweighted_events.lhe.gz" (getMCDir ws) wdav ws 
 
+upload_WeightedLHEGZ :: (Model a) => PipelineSingleWork a 
+upload_WeightedLHEGZ wdav ws = upload "_events.lhe.gz" (getMCDir ws) wdav ws 
+
 upload_PythiaLHEGZ :: (Model a) => PipelineSingleWork a 
 upload_PythiaLHEGZ wdav ws = upload "_pythia_events.lhe.gz" (getMCDir ws) wdav ws
 
