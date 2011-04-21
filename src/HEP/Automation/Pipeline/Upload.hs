@@ -22,28 +22,31 @@ import System.FilePath
 
 import HEP.Automation.Pipeline.Download
 
-
-upload :: (Model a) => String -> PipelineSingleWork a 
-upload ext wdav ws = do  
-  let rname = makeRunName (ws_psetup ws) (ws_rsetup ws)
-      filename = rname ++ ext
-      ssetup = ws_ssetup ws 
+getMCDir :: (Model a) => WorkSetup a -> String
+getMCDir ws = 
+  let ssetup = ws_ssetup ws 
       psetup = ws_psetup ws 
       wbase = workbase ssetup 
       wname = workname psetup
-      ldir = wbase </> wname </> "Events" 
+  in  wbase </> wname </> "Events" 
+
+
+upload :: (Model a) => String -> FilePath -> PipelineSingleWork a 
+upload ext ldir wdav ws = do  
+  let rname = makeRunName (ws_psetup ws) (ws_rsetup ws)
+      filename = rname ++ ext
   uploadFile wdav (ws_storage ws) (ldir </> filename)
   
 upload_PartonLHEGZ :: (Model a) => PipelineSingleWork a 
-upload_PartonLHEGZ = upload "_unweighted_events.lhe.gz"
+upload_PartonLHEGZ wdav ws = upload "_unweighted_events.lhe.gz" (getMCDir ws) wdav ws 
 
 upload_PythiaLHEGZ :: (Model a) => PipelineSingleWork a 
-upload_PythiaLHEGZ = upload "_pythia_events.lhe.gz"
+upload_PythiaLHEGZ wdav ws = upload "_pythia_events.lhe.gz" (getMCDir ws) wdav ws
 
 upload_LHCO :: (Model a) => PipelineSingleWork a
-upload_LHCO = upload "_pgs_events.lhco"
+upload_LHCO wdav ws = upload "_pgs_events.lhco" (getMCDir ws) wdav ws
 
 upload_BannerTXT :: (Model a) => PipelineSingleWork a 
-upload_BannerTXT = upload "_banner.txt"
+upload_BannerTXT wdav ws = upload "_banner.txt" (getMCDir ws) wdav ws
 
 
