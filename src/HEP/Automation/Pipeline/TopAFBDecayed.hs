@@ -85,10 +85,10 @@ topAFBDecayedMathematicaDriver aconf atype wdav ws = do
       exportfilenameTopInfo = rname ++ "_topinfo.dat"
       exportfilenameSuccintInfo = rname ++ "_succintinfo.dat"
       afb = TopAFBDecayedSetup {
-               afbd_mainPkgFile = "mainTopInfoRoutine.m"
-             , afbd_lheLepJetCuttingFunctionPkgFile = case atype of 
-                                                        DoubleTop -> "mainDecayedTopInfoRoutine.m"
-                                                        SingleTop -> "mainDecayedSingleTopInfoRoutine.m"
+               afbd_mainPkgFile = case atype of 
+                                    DoubleTop -> "mainDecayedTopInfoRoutine.m"
+                                    SingleTop -> "mainDecayedSingleTopInfoRoutine.m"
+             , afbd_lheLepJetCuttingFunctionPkgFile = "lhe_lepjet_cutting_functions.m"
              , afbd_lheFile         = rname ++ "_unweighted_events.lhe.gz"
              , afbd_bannerFile      = rname ++ "_banner.txt" 
              , afbd_exportFileOne   = rname ++ "_uncuttopinfo.dat"
