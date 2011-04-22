@@ -37,6 +37,10 @@ upload ext ldir wdav ws = do
       filename = rname ++ ext
   uploadFile wdav (ws_storage ws) (ldir </> filename)
   
+uploadEvent :: (Model a) => String -> PipelineSingleWork a 
+uploadEvent ext wdav ws = upload ext (getMCDir ws) wdav ws 
+
+
 upload_PartonLHEGZ :: (Model a) => PipelineSingleWork a 
 upload_PartonLHEGZ wdav ws = upload "_unweighted_events.lhe.gz" (getMCDir ws) wdav ws 
 
