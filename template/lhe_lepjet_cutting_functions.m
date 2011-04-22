@@ -400,7 +400,7 @@ num=getSciTextNum[x];
 exp = getSciTextExponent[x];
 If[getSciTextSign[x]=="+",
 num*10^exp,
-num*10^- exp
+num*10^(-exp) (* corrected Apr 21 *)
 ]
 ]
 
@@ -408,7 +408,7 @@ num*10^- exp
 getWeightAndNumEvtsFromTXT[x_String]:=Module[{s,w,n},
 s =StringCases[x,"<MGGenerationInfo>"~~___~~"</MGGenerationInfo>"];
 If[Length[s]==1,s = First[s];,Print["Error: More or less than one MG event info in file."];Abort[]];
-w = First[StringCases[First[StringCases[s,"Integrated weight (pb)"~~___~~"#  Truncated"]],"."~~___~~"+"~~_~~_]];
+w = StringDrop[First[StringCases[First[StringCases[s,"Integrated weight (pb)"~~___~~"#  Truncated"]],":"~~___~~"E"~~_~~_~~_]],1]; (* corrected Apr 21 *)
 w=convertSciText[w];
 n = ToExpression[StringDrop[StringDrop[First[StringCases[First[StringCases[s,"#  Number of Events"~~___~~"#  Integrated weight"]],":"~~___~~"#"]],1],-1]];
 {w,n}
