@@ -65,10 +65,19 @@ p_cluster = do
   spaces 
   char '='
   spaces
-  numstr <- many1 (digit)
-  many (char ' ')
-  char '\n'
-  let n = read numstr
-  if n == 0 
-    then return NoParallel 
-    else return (Parallel n)
+  p_or_c
+  
+p_or_c = do 
+  try (do string "p" 
+          spaces 
+          numstr <- many1 (digit)
+          many (char ' ')
+          char '\n'
+          let n = read numstr
+          if n == 0 
+            then return NoParallel 
+            else return (Parallel n))
+  <|> (do string "c" 
+          many (char ' ') 
+          char '\n'
+          return (Cluster undefined "ttt"))

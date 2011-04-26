@@ -145,25 +145,23 @@ pipelineEvGen confsys confusr egs commandInit command inittaskf tasklistf = do
       sleep 2
       mapM_ (runReaderT (command egs)) (tasklistf ssetup csetup)
 
-pipelineEvGenCluster  :: (Model a) => 
-                         String              -- ^ system config  
-                         -> String           -- ^ user config
-                         -> ClusterSetup a    -- ^ new cluster setup
-                         -> EventGenerationSwitch 
-                         -> (EventGenerationSwitch -> WorkIO a ())      -- ^ commandInit
-                         -> (EventGenerationSwitch -> WorkIO a ())      -- ^ command
-                         -> ( ScriptSetup -> ClusterSetup a -> [WorkSetup a] )  
-                         -- ^ tasklist gen function 
-                         -> ( ScriptSetup -> ClusterSetup a -> [WorkSetup a] )  
-                         -- ^ tasklist gen function 
-                         -> IO ()
-pipelineEvGenCluster confsys confusr newcsetup egs commandInit command inittaskf tasklistf = do 
+
+
+pipelineEvGenCluster :: (Model a) => 
+                        String              -- ^ system config  
+                        -> String           -- ^ user config
+                        -> (ScriptSetup -> ClusterSetup a -> ClusterWork a)
+                        -> EventGenerationSwitch 
+                        -> (EventGenerationSwitch -> ClusterWork a -> IO ()) -- ^ commandInit
+                        -> (EventGenerationSwitch -> ClusterWork a -> IO ()) -- ^ commandEach  
+                        -> IO ()
+pipelineEvGenCluster confsys confusr cwgen egs commandInit commandEach = do 
   confresult <- parseConfig confsys confusr
   case confresult of 
     Left errormsg -> putStrLn errormsg
-    Right (ssetup,_csetup :: ClusterSetup DummyModel )  -> do 
+    Right (ssetup,csetup)  -> do 
+      let cw = cwgen ssetup csetup 
       -- create working directory (only once for each process)
-      mapM_ (runReaderT (commandInit egs)) (inittaskf ssetup newcsetup)
+      commandInit egs cw 
       sleep 2
-      mapM_ (runReaderT (command egs)) (tasklistf ssetup newcsetup)
-       
+      commandEach egs cw
