@@ -26,9 +26,12 @@ getMCDir :: (Model a) => WorkSetup a -> String
 getMCDir ws = 
   let ssetup = ws_ssetup ws 
       psetup = ws_psetup ws 
+      csetup = ws_csetup ws 
       wbase = workbase ssetup 
       wname = workname psetup
-  in  wbase </> wname </> "Events" 
+  in  case  cluster csetup of 
+        Cluster _ cname -> wbase </> cname </> "Events"
+        _               -> wbase </> wname </> "Events" 
 
 
 upload :: (Model a) => String -> FilePath -> PipelineSingleWork a 

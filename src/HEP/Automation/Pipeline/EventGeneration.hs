@@ -3,10 +3,18 @@ module HEP.Automation.Pipeline.EventGeneration where
 import HEP.Automation.MadGraph.Model
 import HEP.Automation.MadGraph.UserCut
 import HEP.Automation.MadGraph.Run
+import HEP.Automation.MadGraph.Util
 import HEP.Automation.MadGraph.SetupType
+
+import Text.StringTemplate
+import Text.StringTemplate.Helpers
 
 import Control.Monad 
 import Control.Monad.Reader
+
+import System.Directory
+import System.FilePath
+import System.Process
 
 data EventGenerationSwitch = EGS {
     dirGenSwitch  :: Bool
@@ -20,22 +28,55 @@ clusterInit (EGS dirgen _) cw = do
     let (WS ssetup psetup rsetup csetup storage) = master cw  
     createWorkDir ssetup psetup 
   
-    let masterworkname = workname psetup 
-  
-    putStrLn "copy template to each" 
-    let wss = slaves cw         
-    mapM_ ((replicateWorkDir masterworkname ssetup) . ws_csetup)  wss 
-          
+
 
 clusterEach :: (Model a) => EventGenerationSwitch -> ClusterWork a -> IO () 
-clusterEach (EGS _ cleanup) cw = do 
+clusterEach (EGS dirgen cleanup) cw = do 
   let action = do 
+        replication (master cw) 
         compileFortran
-        cardPrepare                      
+        cardPrepare  
+        clusterGenEvent                     
 --        generateEvents   
-  putStrLn "each work"
-  mapM_ (runReaderT action) (slaves cw)         
+
+  let (WS ssetup psetup rsetup csetup storage) = master cw  
+
   
+--   putStrLn "copy template to each" 
+  let wss = slaves cw         
+
+  putStrLn "each work"
+  mapM_ (runReaderT action) wss
+
+
+
+replication :: (Model a) => WorkSetup a -> WorkIO a () 
+replication masterws = do 
+  WS ssetup psetup rsetup csetup _ <- ask 
+  let masterworkname = workname psetup        
+  liftIO (replicateWorkDir masterworkname ssetup csetup) 
+
+
+clusterGenEvent :: (Model a) => WorkIO  a () 
+clusterGenEvent = do 
+  (WS ssetup psetup rsetup csetup _ ) <- ask 
+  wdir <- getWorkDir
+  let slaveworkname = cluster_workname .cluster $ csetup 
+      taskname = makeRunName psetup rsetup 
+  liftIO $ do 
+    setCurrentDirectory wdir 
+    templates <- directoryGroup (templatedir ssetup) 
+    let str = renderTemplateGroup 
+                templates 
+                [ ("workdir",wdir) 
+                , ("runname",taskname) ] 
+                "generate_event.pbs" 
+              ++ "\n\n\n"
+        pbsfilename = workingdir ssetup </> taskname ++ ".pbs" 
+    writeFile pbsfilename str 
+    putStrLn $ "send job " ++ slaveworkname
+    readProcess "qsub" [ pbsfilename ] "" 
+    return () 
         
 {-
   

@@ -1,5 +1,5 @@
 Name:		pipeline
-Version:	0.2.0.0
+Version:	0.2.0.1
 Synopsis:	pipeline for Mone Carlo run
 Description: 	pipeline for Monte Carlo run, 
                 it manages computing machine and processes.
@@ -25,7 +25,7 @@ Library
   ghc-options: 	-Wall -O2 -threaded -funbox-strict-fields -fno-warn-unused-do-bind
   ghc-prof-options: -caf-all -auto-all
   Build-Depends: base>4, process, unix, directory, mtl>2, 
-                 madgraph-auto > 0.3.6,  parsec>3, filepath,
+                 madgraph-auto > 0.4,  parsec>3, filepath,
                  LHCOAnalysis-type, LHCOAnalysis >0.5, webdav-manager > 0.0.2,
                  LHEParser, attoparsec,
                  iteratee, iteratee-util > 0.0.2, binary, bytestring,
