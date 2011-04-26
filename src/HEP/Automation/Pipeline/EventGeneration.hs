@@ -12,9 +12,21 @@ data EventGenerationSwitch = EGS {
   , cleanUp       :: Bool
   }
 
+fullGenerationInit :: (Model a) => EventGenerationSwitch -> WorkIO a () 
+fullGenerationInit (EGS dirgen _) = do 
+  WS ssetup psetup _ csetup _ <- ask 
+  case dirgen of 
+    True  -> liftIO $ createWorkDir ssetup psetup
+    False -> return ()
+  case cluster csetup of
+    NoParallel  -> liftIO $ putStrLn "noparallel setup"
+    Parallel _  -> liftIO $ putStrLn "parallel setup" 
+    Cluster  _  -> liftIO $ putStrLn "cluster setup"
+
 fullGeneration :: (Model a) => EventGenerationSwitch -> WorkIO a () 
 fullGeneration (EGS _ cleanup) = do 
   WS _ _ rsetup _ _ <- ask
+  
   compileFortran
   cardPrepare                      
   generateEvents   

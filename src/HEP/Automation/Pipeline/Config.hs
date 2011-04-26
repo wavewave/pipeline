@@ -1,17 +1,19 @@
 module HEP.Automation.Pipeline.Config where
 
 import Text.Parsec 
-import HEP.Automation.MadGraph.Cluster
+import HEP.Automation.MadGraph.Model
 import HEP.Automation.MadGraph.SetupType 
+
 
 import System.FilePath ((</>))
 import Paths_pipeline
 
 type ConfigParsec = Parsec String ()
 
-parseConfig :: String 
+parseConfig :: (Model a) => 
+               String 
                -> String 
-               -> IO (Either String (ScriptSetup,ClusterSetup))
+               -> IO (Either String (ScriptSetup,ClusterSetup a))
 parseConfig confsys confusr = do
   let sysresult = parse configEvGenSystem "" confsys
   templdir <- return . ( </> "template" ) =<< getDataDir 
@@ -26,16 +28,17 @@ parseConfig confsys confusr = do
         
 
 
-configEvGenSystem :: ConfigParsec (String -> String -> (ScriptSetup,ClusterSetup)) 
+configEvGenSystem :: (Model a) => ConfigParsec (String -> String -> (ScriptSetup,ClusterSetup a)) 
 configEvGenSystem = do 
   mg5  <- p_dir "mg5base"
   work <- p_dir "workbase"
   clu  <- p_cluster 
   return (\x y -> (SS x y mg5 work, CS clu))
 
-configEvGenUser :: String 
-                   -> (String->String-> (ScriptSetup,ClusterSetup)) 
-                   -> ConfigParsec (ScriptSetup,ClusterSetup)
+configEvGenUser :: (Model a) => 
+                   String 
+                   -> (String->String-> (ScriptSetup,ClusterSetup a)) 
+                   -> ConfigParsec (ScriptSetup,ClusterSetup a)
 configEvGenUser tmpldir f = do 
   wdir <- p_dir "workingdir"
   return $ f tmpldir wdir 
@@ -56,7 +59,7 @@ p_dir str = do
   char '\n'
   return val
   
-p_cluster :: ConfigParsec ClusterRunType
+p_cluster :: (Model a) => ConfigParsec (ClusterRunType a)
 p_cluster = do 
   string "cluster"
   spaces 

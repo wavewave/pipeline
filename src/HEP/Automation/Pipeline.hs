@@ -1,3 +1,5 @@
+{-# LANGUAGE ScopedTypeVariables, NoMonomorphismRestriction #-}
+
 module HEP.Automation.Pipeline where
 
 import Control.Monad.Reader 
@@ -57,7 +59,7 @@ pipelineLHE analysis = pipelineGen (testLHE analysis)
 pipelineTopAFB :: (Model a) => 
                   String   -- ^ system config
                   -> String -- ^ user config 
-                  -> (ScriptSetup -> ClusterSetup -> [WorkSetup a] ) 
+                  -> (ScriptSetup -> ClusterSetup a -> [WorkSetup a] ) 
                      -- ^ tasklistf 
                   -> WebDAVConfig
                   -> AnalysisWorkConfig 
@@ -95,7 +97,7 @@ pipelineTopAFB confsys confusr tasklistf wdav aconf = do
 pipelineLHCOAnal :: (Model a) => 
                   String              -- ^ system config  
                   -> String           -- ^ user config
-                  -> ( ScriptSetup -> ClusterSetup -> [WorkSetup a] )  
+                  -> ( ScriptSetup -> ClusterSetup a -> [WorkSetup a] )  
                       -- ^ tasklist 
                   -> WebDAVConfig
                   -> WebDAVRemoteDir
@@ -126,26 +128,42 @@ pipelineEvGen  :: (Model a) =>
                   String              -- ^ system config  
                   -> String           -- ^ user config
                   -> EventGenerationSwitch 
+                  -> (EventGenerationSwitch -> WorkIO a ())      -- ^ commandInit
                   -> (EventGenerationSwitch -> WorkIO a ())      -- ^ command
-                  -> [ProcessSetup a] -- ^ process setup list 
-                  -> ( ScriptSetup -> ClusterSetup -> [WorkSetup a] )  
+                  -> ( ScriptSetup -> ClusterSetup a -> [WorkSetup a] )  
+                      -- ^ tasklist gen function 
+                  -> ( ScriptSetup -> ClusterSetup a -> [WorkSetup a] )  
                       -- ^ tasklist gen function 
                   -> IO ()
-pipelineEvGen confsys confusr egs command psetuplist tasklistf = do 
+pipelineEvGen confsys confusr egs commandInit command inittaskf tasklistf = do 
   confresult <- parseConfig confsys confusr
   case confresult of 
-    Left errormsg -> do 
-      putStrLn errormsg
+    Left errormsg -> putStrLn errormsg
     Right (ssetup,csetup) -> do 
       -- create working directory (only once for each process)
-
---      putStrLn . show $ tasklistf ssetup csetup 
-      case dirGenSwitch egs of 
-        True -> mapM_ (createWorkDir ssetup) psetuplist
-        False -> return ()
+      mapM_ (runReaderT (commandInit egs)) (inittaskf ssetup csetup)
       sleep 2
       mapM_ (runReaderT (command egs)) (tasklistf ssetup csetup)
 
+pipelineEvGenCluster  :: (Model a) => 
+                         String              -- ^ system config  
+                         -> String           -- ^ user config
+                         -> ClusterSetup a    -- ^ new cluster setup
+                         -> EventGenerationSwitch 
+                         -> (EventGenerationSwitch -> WorkIO a ())      -- ^ commandInit
+                         -> (EventGenerationSwitch -> WorkIO a ())      -- ^ command
+                         -> ( ScriptSetup -> ClusterSetup a -> [WorkSetup a] )  
+                         -- ^ tasklist gen function 
+                         -> ( ScriptSetup -> ClusterSetup a -> [WorkSetup a] )  
+                         -- ^ tasklist gen function 
+                         -> IO ()
+pipelineEvGenCluster confsys confusr newcsetup egs commandInit command inittaskf tasklistf = do 
+  confresult <- parseConfig confsys confusr
+  case confresult of 
+    Left errormsg -> putStrLn errormsg
+    Right (ssetup,_csetup :: ClusterSetup DummyModel )  -> do 
+      -- create working directory (only once for each process)
+      mapM_ (runReaderT (commandInit egs)) (inittaskf ssetup newcsetup)
+      sleep 2
+      mapM_ (runReaderT (command egs)) (tasklistf ssetup newcsetup)
        
-
-          
