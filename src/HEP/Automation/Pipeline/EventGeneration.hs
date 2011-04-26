@@ -107,10 +107,11 @@ fullGenerationInit (EGS dirgen _) = do
     do WS ssetup psetup _ csetup _ <- ask 
        case cluster csetup of
          Cluster  _ _  -> do 
-           liftIO $ putStrLn "cluster setup"
-           liftIO $ createWorkDir ssetup psetup 
-         NoParallel  -> liftIO $ putStrLn "noparallel setup"
-         Parallel _  -> liftIO $ putStrLn "parallel setup" 
+           liftIO $ putStrLn "error : this is not a cluster"
+           error ""
+         _ -> do 
+           liftIO $ putStrLn "noncluster setup"
+           liftIO $ createWorkDir ssetup psetup
   return () 
 
 fullGeneration :: (Model a) => EventGenerationSwitch -> WorkIO a () 
