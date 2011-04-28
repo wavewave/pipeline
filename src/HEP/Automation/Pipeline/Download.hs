@@ -52,6 +52,10 @@ download_PartonLHEGZandUnzip wdav wdir ws = do
   gunzip "_unweighted_events.lhe.gz" wdav wdir ws  -}
 
 
+download_LHCOGZ :: (Model a) => FilePath -> PipelineSingleWork a 
+download_LHCOGZ = download "_pgs_events.lhco.gz"
+
+
 
 download_LHCO :: (Model a) => FilePath -> PipelineSingleWork a
 download_LHCO = download "_pgs_events.lhco"

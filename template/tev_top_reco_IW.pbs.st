@@ -1,5 +1,6 @@
 #PBS -q flux
-##PBS -l nodes=1:ppn=1
+##PBS -l nodes=1:ppn=1,walltime=5:00:00,qos=kzurek_flux
+#PBS -A kzurek_flux
 #PBS -N math1
 ##PBS -o $ofile$
 #PBS -S /bin/bash

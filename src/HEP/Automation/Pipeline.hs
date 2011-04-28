@@ -24,7 +24,7 @@ import HEP.Automation.Pipeline.DetectorAnalysis
 import HEP.Automation.Pipeline.EventGeneration
 import HEP.Automation.Pipeline.TopAFB
 import HEP.Automation.Pipeline.PartonLevelAnalysis
-
+import HEP.Automation.Pipeline.TopRecon
 
 import HEP.Automation.Pipeline.Download
 
@@ -51,6 +51,9 @@ pipelineGen work wdav confsys confusr tasklistf   = do
       templdir <- return . ( </> "template" ) =<< getDataDir 
       forM_ tasklist (work wdav)
              
+pipelineTopRecon :: (Model a) => (WorkSetup a -> IO ()) -> PipelineWork a
+pipelineTopRecon analysis = pipelineGen (reconAnalysis analysis)
+
 pipelineLHE :: (Model a) => (LHEvent -> IO ()) -> PipelineWork a
 pipelineLHE analysis = pipelineGen (testLHE analysis)  
 
