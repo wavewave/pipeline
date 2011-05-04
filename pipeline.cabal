@@ -1,4 +1,4 @@
-OBName:		pipeline
+Name:		pipeline
 Version:	0.2.2.0
 Synopsis:	pipeline for Mone Carlo run
 Description: 	pipeline for Monte Carlo run, 
