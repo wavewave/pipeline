@@ -17,8 +17,9 @@ import HEP.Automation.Pipeline.Type
 import HEP.Automation.Pipeline.Download
 
 
-data TopReconSetup = TRSetup { 
-    tr_packagefile         :: FilePath
+data TopReconSetup = TRSetup {
+    tr_mainfile            :: FilePath
+  , tr_packagefile         :: FilePath
   , tr_chameleondir        :: FilePath
   , tr_chameleon           :: FilePath
   , tr_lhcofile            :: FilePath
@@ -56,18 +57,20 @@ topreconPrelim workdir templatedir chisqrcut ws =
   let psetup = ws_psetup ws
       rsetup = ws_rsetup ws 
       runname = makeRunName psetup rsetup	
-      package = "tev_top_reco_IW_package.m"
+      mainfile = "tev_top_reco_main_routine.m"
+      package = "tev_top_reco_may4.m"
       chameleondir = workdir 
       chameleon = "Chameleon1_02.m"
       lhcofile = workdir </> runname ++ "_pgs_events.lhco.gz"
-      sampleCutEvtsdat    = workdir </> runname++"_sampleCutEvts_"++"ChiSqrCut"++ (show chisqrcut) ++ ".dat"
-      sampleRecoEvtsdat   = workdir </> runname++"_sampleRecoEvts_"++"ChiSqrCut"++ (show chisqrcut) ++ ".dat"
-      samplePassedEvtsdat = workdir </> runname++"_samplePassedEvts_"++"ChiSqrCut"++(show chisqrcut) ++ ".dat"
-      sampleRecoInfodat   = workdir </> runname++"_sampleRecoInfo_"++"ChiSqrCut"++(show chisqrcut) ++".dat"
+      sampleCutEvtsdat    = workdir </> runname++"_CutEvts.dat"    -- ++"ChiSqrCut"++ (show chisqrcut) ++ ".dat"
+      sampleRecoEvtsdat   = workdir </> runname++"_RecoEvts.dat"   -- ++"ChiSqrCut"++ (show chisqrcut) ++ ".dat"
+      samplePassedEvtsdat = workdir </> runname++"_PassedEvts.dat" -- ++"ChiSqrCut"++(show chisqrcut) ++ ".dat"
+      sampleRecoInfodat   = workdir </> runname++"_RecoInfo.dat"   -- ++"ChiSqrCut"++(show chisqrcut) ++".dat"
       mfile   = workdir </> runname ++ ".m"
       ofile   = workdir </> runname ++ ".log"
       pbsfile = workdir </> runname ++ ".pbs"
   in TRSetup { 
+           tr_mainfile = mainfile,
            tr_packagefile  = package,
            tr_chameleondir = chameleondir, 
            tr_chameleon    = chameleon, 
@@ -89,25 +92,29 @@ topreconSetup ts tp = do
   templates <- directoryGroup tp 
   let str = (renderTemplateGroup 
               templates
-              [ ("chameleondir"        , (tr_chameleondir        ts ))
-	      , ("chameleon"           , (tr_chameleon           ts ))
-              , ("lhcofile"            , (tr_lhcofile            ts ))
-              , ("sampleCutEvtsdat"    , (tr_sampleCutEvtsdat    ts ))
-              , ("sampleRecoEvtsdat"   , (tr_sampleRecoEvtsdat   ts )) 
-              , ("samplePassedEvtsdat" , (tr_samplePassedEvtsdat ts )) 
-              , ("sampleRecoInfodat"   , (tr_sampleRecoInfodat   ts ))
-              , ("chisqrcut"           , show  (tr_chisqrcut           ts )) 
+              [ -- ("chameleondir"        , (tr_chameleondir        ts )),
+	        ("chameleon"           , (tr_chameleon           ts ))
+              , ("packageFile"         , (tr_packagefile         ts ))
+              , ("lhcoFile"            , (tr_lhcofile            ts ))
+              , ("cutEventsFileName"    , (tr_sampleCutEvtsdat    ts ))
+              , ("recoEventsFileName"   , (tr_sampleRecoEvtsdat   ts )) 
+              , ("passedEventsFileName" , (tr_samplePassedEvtsdat ts )) 
+              , ("recoInfoFileName"   , (tr_sampleRecoInfodat   ts ))
+              --  , ("chisqrcut"           , show  (tr_chisqrcut           ts )) 
               ] 
-              (tr_packagefile ts)) ++ "\n\n\n" 
+              (tr_mainfile ts)) ++ "\n\n\n" 
   
   existThenRemove (tr_mfile ts)
-  writeFile (tr_mfile ts) str  
+  writeFile (tr_mfile ts) str
+  
   return () 
 
 topreconSendBatch :: TopReconSetup -> FilePath -> FilePath -> IO () 
 topreconSendBatch ts tp workdir = do 
   topreconSetup ts tp 
   existThenRemove (tr_pbsfile ts) 
+
+  copyFile (tp </> tr_packagefile ts) (workdir </> tr_packagefile ts)
 
   templates <- directoryGroup tp 
   let str = (renderTemplateGroup 
