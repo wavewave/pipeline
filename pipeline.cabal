@@ -31,8 +31,11 @@ Library
                  LHEParser, attoparsec,
                  iteratee, iteratee-util > 0.0.2, binary, bytestring,
                  HStringTemplate, HStringTemplateHelpersIW, 
-                 jobqueue-common
+                 jobqueue-common, configparser
   Exposed-Modules: 
+                   HEP.Automation.Pipeline
+                   HEP.Automation.Pipeline.Config
+ 
                    HEP.Automation.PipelineOld
                    HEP.Automation.PipelineOld.Type
                    HEP.Automation.PipelineOld.Config
