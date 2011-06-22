@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables, NoMonomorphismRestriction #-}
 
-module HEP.Automation.Pipeline where
+module HEP.Automation.PipelineOld where
 
 import Control.Monad.Reader 
 
@@ -18,15 +18,15 @@ import Text.Parsec
 
 import HEP.Storage.WebDAV
 
-import HEP.Automation.Pipeline.Type
-import HEP.Automation.Pipeline.Config 
-import HEP.Automation.Pipeline.DetectorAnalysis
-import HEP.Automation.Pipeline.EventGeneration
-import HEP.Automation.Pipeline.TopAFB
-import HEP.Automation.Pipeline.PartonLevelAnalysis
-import HEP.Automation.Pipeline.TopRecon
+import HEP.Automation.PipelineOld.Type
+import HEP.Automation.PipelineOld.Config 
+import HEP.Automation.PipelineOld.DetectorAnalysis
+import HEP.Automation.PipelineOld.EventGeneration
+import HEP.Automation.PipelineOld.TopAFB
+import HEP.Automation.PipelineOld.PartonLevelAnalysis
+import HEP.Automation.PipelineOld.TopRecon
 
-import HEP.Automation.Pipeline.Download
+import HEP.Automation.PipelineOld.Download
 
 import Paths_pipeline
 

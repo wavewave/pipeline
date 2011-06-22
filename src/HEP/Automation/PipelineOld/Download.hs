@@ -1,4 +1,4 @@
-module HEP.Automation.Pipeline.Download where
+module HEP.Automation.PipelineOld.Download where
 
 import System.Directory
 
@@ -14,7 +14,7 @@ import HEP.Parser.LHCOAnalysis
 import HEP.Parser.LHCOAnalysis.Cuts
 import HEP.Parser.LHCOAnalysis.PhysObj
 
-import HEP.Automation.Pipeline.Type
+import HEP.Automation.PipelineOld.Type
 
 import System.Process
 

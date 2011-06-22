@@ -1,6 +1,6 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
-module HEP.Automation.Pipeline.DetectorAnalysis where
+module HEP.Automation.PipelineOld.DetectorAnalysis where
 
 import HEP.Automation.MadGraph.Util
 import HEP.Automation.MadGraph.Model
@@ -20,7 +20,7 @@ import System.Directory
 import qualified Data.Iteratee as Iter
 import Data.Iteratee.Util 
 
-import HEP.Automation.Pipeline.Download
+import HEP.Automation.PipelineOld.Download
 
 data AnalysisWorkConfig = AWConfig { 
     anal_workdir :: FilePath

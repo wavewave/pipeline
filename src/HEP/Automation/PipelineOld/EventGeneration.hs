@@ -1,4 +1,4 @@
-module HEP.Automation.Pipeline.EventGeneration where
+module HEP.Automation.PipelineOld.EventGeneration where
 
 import HEP.Automation.MadGraph.Model
 import HEP.Automation.MadGraph.UserCut

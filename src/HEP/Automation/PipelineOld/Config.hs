@@ -1,4 +1,4 @@
-module HEP.Automation.Pipeline.Config where
+module HEP.Automation.PipelineOld.Config where
 
 import Text.Parsec 
 import HEP.Automation.MadGraph.Model

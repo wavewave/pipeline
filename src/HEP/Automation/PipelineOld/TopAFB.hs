@@ -1,4 +1,4 @@
-module HEP.Automation.Pipeline.TopAFB where
+module HEP.Automation.PipelineOld.TopAFB where
 
 import System.IO
 import System.Directory

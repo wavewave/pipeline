@@ -1,4 +1,4 @@
-module HEP.Automation.Pipeline.Type where
+module HEP.Automation.PipelineOld.Type where
 
 import HEP.Storage.WebDAV
 import HEP.Automation.MadGraph.SetupType

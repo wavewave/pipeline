@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module HEP.Automation.Pipeline.PartonLevelAnalysis where
+module HEP.Automation.PipelineOld.PartonLevelAnalysis where
 
 import HEP.Automation.MadGraph.Util
 import HEP.Automation.MadGraph.Model
@@ -18,8 +18,8 @@ import System.FilePath
 import System.IO
 import System.Directory 
 
-import HEP.Automation.Pipeline.Type 
-import HEP.Automation.Pipeline.Download 
+import HEP.Automation.PipelineOld.Type 
+import HEP.Automation.PipelineOld.Download 
 
 
 import HEP.Parser.LHEParser

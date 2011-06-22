@@ -1,4 +1,4 @@
-module HEP.Automation.Pipeline.TopAFBDecayed where
+module HEP.Automation.PipelineOld.TopAFBDecayed where
 
 import System.IO
 import System.Directory
@@ -15,9 +15,9 @@ import HEP.Automation.MadGraph.Run
 import HEP.Automation.MadGraph.Util
 import HEP.Automation.MadGraph.Model 
 
-import HEP.Automation.Pipeline.Type
-import HEP.Automation.Pipeline.Download
-import HEP.Automation.Pipeline.DetectorAnalysis
+import HEP.Automation.PipelineOld.Type
+import HEP.Automation.PipelineOld.Download
+import HEP.Automation.PipelineOld.DetectorAnalysis
 
 
 

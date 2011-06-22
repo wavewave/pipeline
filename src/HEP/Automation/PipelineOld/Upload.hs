@@ -1,4 +1,4 @@
-module HEP.Automation.Pipeline.Upload where
+module HEP.Automation.PipelineOld.Upload where
 
 import System.Directory
 
@@ -14,13 +14,13 @@ import HEP.Parser.LHCOAnalysis
 import HEP.Parser.LHCOAnalysis.Cuts
 import HEP.Parser.LHCOAnalysis.PhysObj
 
-import HEP.Automation.Pipeline.Type
+import HEP.Automation.PipelineOld.Type
+import HEP.Automation.PipelineOld.Download
 
 import System.Process
 import System.FilePath
 
 
-import HEP.Automation.Pipeline.Download
 
 getMCDir :: (Model a) => WorkSetup a -> String
 getMCDir ws = 

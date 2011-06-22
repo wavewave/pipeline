@@ -1,5 +1,5 @@
 Name:		pipeline
-Version:	0.2.2.1
+Version:	0.2.2.0
 Synopsis:	pipeline for Mone Carlo run
 Description: 	pipeline for Monte Carlo run, 
                 it manages computing machine and processes.
@@ -30,19 +30,20 @@ Library
                  LHCOAnalysis-type, LHCOAnalysis >0.5, webdav-manager > 0.0.2,
                  LHEParser, attoparsec,
                  iteratee, iteratee-util > 0.0.2, binary, bytestring,
-                 HStringTemplate, HStringTemplateHelpersIW
+                 HStringTemplate, HStringTemplateHelpersIW, 
+                 jobqueue-common
   Exposed-Modules: 
-                   HEP.Automation.Pipeline
-                   HEP.Automation.Pipeline.Type
-                   HEP.Automation.Pipeline.Config
-                   HEP.Automation.Pipeline.Upload
-                   HEP.Automation.Pipeline.Download
-                   HEP.Automation.Pipeline.EventGeneration 
-                   HEP.Automation.Pipeline.DetectorAnalysis
-                   HEP.Automation.Pipeline.TopRecon
-                   HEP.Automation.Pipeline.TopAFB
-                   HEP.Automation.Pipeline.TopAFBDecayed
-                   HEP.Automation.Pipeline.PartonLevelAnalysis
+                   HEP.Automation.PipelineOld
+                   HEP.Automation.PipelineOld.Type
+                   HEP.Automation.PipelineOld.Config
+                   HEP.Automation.PipelineOld.Upload
+                   HEP.Automation.PipelineOld.Download
+                   HEP.Automation.PipelineOld.EventGeneration 
+                   HEP.Automation.PipelineOld.DetectorAnalysis
+                   HEP.Automation.PipelineOld.TopRecon
+                   HEP.Automation.PipelineOld.TopAFB
+                   HEP.Automation.PipelineOld.TopAFBDecayed
+                   HEP.Automation.PipelineOld.PartonLevelAnalysis
   Other-Modules:   
                    Paths_pipeline
 

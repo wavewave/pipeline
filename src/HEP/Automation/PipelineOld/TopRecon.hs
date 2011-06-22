@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module HEP.Automation.Pipeline.TopRecon where
+module HEP.Automation.PipelineOld.TopRecon where
 
 import System.Process
 import System.FilePath
@@ -13,8 +13,8 @@ import HEP.Automation.MadGraph.Model
 import HEP.Automation.MadGraph.SetupType
 import HEP.Automation.MadGraph.Util
 
-import HEP.Automation.Pipeline.Type
-import HEP.Automation.Pipeline.Download
+import HEP.Automation.PipelineOld.Type
+import HEP.Automation.PipelineOld.Download
 
 
 data TopReconSetup = TRSetup {
