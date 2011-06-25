@@ -17,9 +17,6 @@ data LocalConfiguration = LocalConfiguration {
   lc_smpConfiguration :: SMPConfiguration
 } deriving (Show)
 
-yesNo :: String -> Bool 
-yesNo "Yes" = True
-yesNo "No"  = False
 
 clientConfigurationParse :: ParsecT String () Identity ClientConfiguration
 clientConfigurationParse =
