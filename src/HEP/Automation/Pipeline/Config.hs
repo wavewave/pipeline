@@ -11,10 +11,16 @@ import HEP.Automation.JobQueue.Config
 import System.FilePath 
 import Paths_pipeline
 
+data NetworkConfiguration = NC { 
+  nc_polling :: Int, 
+  nc_jobqueueurl :: String 
+} deriving (Show)
+
 data LocalConfiguration = LocalConfiguration { 
   lc_clientConfiguration :: ClientConfiguration, 
   lc_scriptSetup :: ScriptSetup, 
-  lc_smpConfiguration :: SMPConfiguration
+  lc_smpConfiguration :: SMPConfiguration, 
+  lc_networkConfiguration :: NetworkConfiguration
 } deriving (Show)
 
 
@@ -41,12 +47,20 @@ smpConfigurationParse =
        1 -> return SingleCPU
        n -> return (MultiCPU n)
 
+networkConfigurationParse :: ParsecT String () Identity NetworkConfiguration
+networkConfigurationParse =
+  oneGroupFieldInput "network" $ do 
+    polling <- oneFieldInput "polling"
+    url <- oneFieldInput "jobqueueurl"
+    return (NC (read polling) url)
+
 localConfigurationParse :: FilePath -> ParsecT String () Identity LocalConfiguration
 localConfigurationParse tmpldir = do 
   cc  <- clientConfigurationParse
   ss  <- scriptSetupParse tmpldir
   smp <- smpConfigurationParse
-  return (LocalConfiguration cc ss smp)
+  nc  <- networkConfigurationParse
+  return (LocalConfiguration cc ss smp nc)
 
 readConfigFile :: FilePath -> IO LocalConfiguration
 readConfigFile conf = do 
