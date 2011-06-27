@@ -2,7 +2,9 @@ module HEP.Automation.Pipeline.Job where
 
 import Control.Monad.Reader
 
+import HEP.Storage.WebDAV 
 import HEP.Storage.WebDAV.Type
+
 import HEP.Automation.Pipeline.Config
 import HEP.Automation.JobQueue.JobType
 import HEP.Automation.JobQueue.JobQueue
@@ -86,3 +88,37 @@ testJob_startTest wc jinfo = return True
 
 testJob_uploadWork :: WorkConfig -> JobInfo -> IO Bool
 testJob_uploadWork wc jinfo = return True
+
+
+{-
+uploadEvent :: (Model a) => String -> PipelineSingleWork a 
+uploadEvent ext wdav ws = upload ext (getMCDir ws) wdav ws 
+
+upload :: (Model a) => String -> FilePath -> PipelineSingleWork a 
+upload ext ldir wdav ws = do  
+  let rname = makeRunName (ws_psetup ws) (ws_rsetup ws)
+      filename = rname ++ ext
+  uploadFile wdav (ws_storage ws) (ldir </> filename)
+
+upload_PartonLHEGZ :: (Model a) => PipelineSingleWork a 
+upload_PartonLHEGZ wdav ws = upload "_unweighted_events.lhe.gz" (getMCDir ws) wdav ws 
+
+upload_WeightedLHEGZ :: (Model a) => PipelineSingleWork a 
+upload_WeightedLHEGZ wdav ws = upload "_events.lhe.gz" (getMCDir ws) wdav ws 
+
+upload_PythiaLHEGZ :: (Model a) => PipelineSingleWork a 
+upload_PythiaLHEGZ wdav ws = upload "_pythia_events.lhe.gz" (getMCDir ws) wdav ws
+
+upload_LHCO :: (Model a) => PipelineSingleWork a
+upload_LHCO wdav ws = upload "_pgs_events.lhco" (getMCDir ws) wdav ws
+
+upload_BannerTXT :: (Model a) => PipelineSingleWork a 
+upload_BannerTXT wdav ws = upload "_banner.txt" (getMCDir ws) wdav ws
+
+getMCDir :: (Model a) => WorkSetup a -> String
+getMCDir ws = 
+  let ssetup = ws_ssetup ws 
+      psetup = ws_psetup ws 
+  in  (workbase ssetup) </> (workname psetup) </> "Events"
+     
+-}

@@ -13,7 +13,9 @@ import Paths_pipeline
 
 data NetworkConfiguration = NC { 
   nc_polling :: Int, 
-  nc_jobqueueurl :: String 
+  nc_jobqueueurl :: String, 
+  nc_wgetPath :: FilePath, 
+  nc_cadaverPath :: FilePath
 } deriving (Show)
 
 data LocalConfiguration = LocalConfiguration { 
@@ -52,7 +54,9 @@ networkConfigurationParse =
   oneGroupFieldInput "network" $ do 
     polling <- oneFieldInput "polling"
     url <- oneFieldInput "jobqueueurl"
-    return (NC (read polling) url)
+    wget <- oneFieldInput "wgetPath"
+    cadaver <- oneFieldInput "cadaverPath"
+    return (NC (read polling) url wget cadaver)
 
 localConfigurationParse :: FilePath -> ParsecT String () Identity LocalConfiguration
 localConfigurationParse tmpldir = do 
