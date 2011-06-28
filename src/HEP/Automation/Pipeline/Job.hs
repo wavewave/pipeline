@@ -1,3 +1,5 @@
+{-# LANGUAGE Rank2Types #-}
+
 module HEP.Automation.Pipeline.Job where
 
 import Control.Monad.Reader
@@ -12,6 +14,7 @@ import HEP.Automation.JobQueue.JobQueue
 import System.Directory
 import System.FilePath
 
+import HEP.Automation.MadGraph.Model
 import HEP.Automation.MadGraph.SetupType
 import HEP.Automation.MadGraph.Run
 import HEP.Automation.MadGraph.UserCut
@@ -57,7 +60,24 @@ testJob_checkSystem wc jinfo = do
 
 
 testJob_startWork :: WorkConfig -> JobInfo -> IO Bool
-testJob_startWork wc jinfo = do  
+testJob_startWork wc jinfo = doGenericWorkSetupWork wc jinfo work 
+  where work ws = flip runReaderT ws $ do 
+                         WS _ _ rsetup _ _ <- ask
+                         compileFortran
+                         cardPrepare                      
+                         generateEvents   
+                         case usercut rsetup of
+                           UserCutDef _ -> do 
+                             runHEP2LHE       
+                             runHEPEVT2STDHEP 
+                             runPGS           
+                             runClean         
+                             updateBanner     
+                           NoUserCutDef -> return ()
+                         cleanHepFiles
+                         return True
+                    
+{-  
   let ss = lc_scriptSetup . wc_localconf $ wc
       cs = case (lc_smpConfiguration . wc_localconf) wc of
              SingleCPU -> CS NoParallel
@@ -82,6 +102,19 @@ testJob_startWork wc jinfo = do
         cleanHepFiles
       return True
     _ -> return False
+-}
+
+doGenericWorkSetupWork :: WorkConfig -> JobInfo 
+                       -> (forall a. (Model a) => WorkSetup a -> r) -> r
+doGenericWorkSetupWork wc jinfo work = 
+  let ss = lc_scriptSetup . wc_localconf $ wc
+      cs = case (lc_smpConfiguration . wc_localconf) wc of
+             SingleCPU -> CS NoParallel
+             MultiCPU n -> CS (Parallel n)
+      storage = (jobdetail_remotedir . jobinfo_detail) jinfo
+  in case (jobdetail_evset . jobinfo_detail) jinfo of 
+       EventSet ps rs -> let wsetup = WS ss ps rs cs storage 
+                         in  work wsetup 
 
 testJob_startTest :: WorkConfig -> JobInfo -> IO Bool
 testJob_startTest wc jinfo = return True
@@ -90,15 +123,32 @@ testJob_uploadWork :: WorkConfig -> JobInfo -> IO Bool
 testJob_uploadWork wc jinfo = return True
 
 
-{-
-uploadEvent :: (Model a) => String -> PipelineSingleWork a 
-uploadEvent ext wdav ws = upload ext (getMCDir ws) wdav ws 
+mkWebDAVConfig :: WorkConfig -> WebDAVConfig
+mkWebDAVConfig wc =
+  let baseurl = webdav_server_url . wc_webdavconf $ wc
+      wget = nc_wgetPath . lc_networkConfiguration . wc_localconf $ wc
+      cadaver = nc_cadaverPath . lc_networkConfiguration . wc_localconf $ wc
+  in  WebDAVConfig wget cadaver baseurl
 
-upload :: (Model a) => String -> FilePath -> PipelineSingleWork a 
-upload ext ldir wdav ws = do  
+{-
+uploadEvent :: WorkConfig -> String -> WebDAVConfig -> IO ()  
+uploadEvent wc ext wdav = upload wc ext (getMCDir ws) wdav
+
+
+wdav ws 
+ext wdav ws 
+
+
+upload :: WorkConfig -> String -> FilePath -> WebDAVConfig -> IO ()
+upload wc ext ldir = do  
   let rname = makeRunName (ws_psetup ws) (ws_rsetup ws)
       filename = rname ++ ext
   uploadFile wdav (ws_storage ws) (ldir </> filename)
+
+
+
+ext ldir wdav ws = 
+
 
 upload_PartonLHEGZ :: (Model a) => PipelineSingleWork a 
 upload_PartonLHEGZ wdav ws = upload "_unweighted_events.lhe.gz" (getMCDir ws) wdav ws 
