@@ -8,7 +8,7 @@ ATLAS               ! parameter set name
 0.8                 ! hadronic calolrimeter resolution * sqrt(E)
 0.2                 ! MET resolution
 0.00                ! calorimeter cell edge crack fraction
-cone                ! jet finding algorithm (cone or ktjet)
+$jetalgo$           ! jet finding algorithm (cone or ktjet)
 3.0                 ! calorimeter trigger cluster finding seed threshold (GeV)
 0.5                 ! calorimeter trigger cluster finding shoulder threshold (GeV)
 0.70                ! calorimeter kt cluster finder cone size (delta R)
