@@ -1,14 +1,18 @@
 module HEP.Automation.Pipeline.Config where
 
 import Text.Parsec
-import HEP.Parser.Config
+
 import Control.Monad.Identity
 import Control.Applicative
+import Control.Exception (bracket)
 
+import HEP.Parser.Config
 import HEP.Automation.MadGraph.SetupType
 import HEP.Automation.JobQueue.Config
 
 import System.FilePath 
+import System.IO
+
 import Paths_pipeline
 
 data NetworkConfiguration = NC { 
@@ -69,11 +73,12 @@ localConfigurationParse tmpldir = do
 readConfigFile :: FilePath -> IO LocalConfiguration
 readConfigFile conf = do 
   putStrLn conf
-  str <- readFile conf
-  tmpldir <- return . ( </> "template" ) =<< getDataDir
-  let r = parse (localConfigurationParse tmpldir) "" str
-  case r of 
-    Right result -> do putStrLn (show result) 
-                       return result
-    Left err -> error (show err) 
+  bracket (openFile conf ReadMode) hClose $ \fh -> do 
+    str <- hGetContents fh --  readFile conf
+    tmpldir <- return . ( </> "template" ) =<< getDataDir
+    let r = parse (localConfigurationParse tmpldir) "" str
+    case r of 
+      Right result -> do putStrLn (show result) 
+                         return $! result
+      Left err -> error (show err) 
 

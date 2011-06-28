@@ -20,10 +20,12 @@ import HEP.Automation.MadGraph.Run
 import HEP.Automation.MadGraph.Util
 import HEP.Automation.MadGraph.UserCut
 
+import Debug.Trace
+
 data WorkConfig = WorkConfig {
   wc_localconf :: LocalConfiguration, 
   wc_webdavconf :: WebDAVServer
-}
+} deriving Show
 
 data PipelineJob = PipelineJob { 
     pipeline_checkSystem :: WorkConfig -> JobInfo -> IO Bool, 
@@ -31,6 +33,24 @@ data PipelineJob = PipelineJob {
     pipeline_startTest   :: WorkConfig -> JobInfo -> IO Bool, 
     pipeline_uploadWork  :: WorkConfig -> JobInfo -> IO Bool
 }
+
+jobMatch :: JobInfo -> PipelineJob
+jobMatch jinfo = case jobinfo_detail jinfo of
+                   EventGen _ _ -> dummyJob -- testJob
+                   _ -> undefined 
+
+
+dummyJob :: PipelineJob
+dummyJob = PipelineJob
+             dummyJob_checkSystem
+             dummyJob_startWork
+             dummyJob_startTest
+             dummyJob_uploadWork
+
+dummyJob_checkSystem _ _ = return True
+dummyJob_startWork _ _ = return True
+dummyJob_startTest _ _ = return True
+dummyJob_uploadWork _ _ = return True 
 
 
 testJob :: PipelineJob
@@ -40,11 +60,7 @@ testJob = PipelineJob
             testJob_startTest
             testJob_uploadWork
 
-jobMatch :: JobInfo -> PipelineJob
-jobMatch jinfo = case jobinfo_detail jinfo of
-                   EventGen _ _ -> testJob
-                   _ -> undefined 
-                    
+                   
 
 testJob_checkSystem :: WorkConfig -> JobInfo -> IO Bool
 testJob_checkSystem wc jinfo = do 
@@ -86,7 +102,7 @@ doGenericWorkSetupWork wc jinfo work =
              SingleCPU -> CS NoParallel
              MultiCPU n -> CS (Parallel n)
       storage = (jobdetail_remotedir . jobinfo_detail) jinfo
-  in case (jobdetail_evset . jobinfo_detail) jinfo of 
+  in  case (jobdetail_evset . jobinfo_detail) jinfo of 
        EventSet ps rs -> let wsetup = WS ss ps rs cs storage 
                          in  work wsetup 
 
