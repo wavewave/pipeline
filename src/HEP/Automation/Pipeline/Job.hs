@@ -36,7 +36,7 @@ data PipelineJob = PipelineJob {
 
 jobMatch :: JobInfo -> PipelineJob
 jobMatch jinfo = case jobinfo_detail jinfo of
-                   EventGen _ _ -> dummyJob -- testJob
+                   EventGen _ _ -> testJob
                    _ -> undefined 
 
 
