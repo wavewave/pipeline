@@ -118,7 +118,7 @@ uploadEventFull :: (Model a) => WebDAVConfig -> WorkSetup a -> IO Bool
 uploadEventFull wdav wsetup = do 
   mapM_ (uploadEvent wdav wsetup) 
     [ "_unweighted_events.lhe.gz", "_events.lhe.gz", "_pythia_events.lhe.gz"
-    , "_pgs_events.lhco.gz", "_banner.txt", "_newbanner.txt" ]  
+    , "_pgs_events.lhco.gz", "_banner.txt", "_newbanner.txt", "_pythia.log" ]  
   return True 
 
 uploadEvent :: (Model a) => WebDAVConfig -> WorkSetup a -> String -> IO ()  
