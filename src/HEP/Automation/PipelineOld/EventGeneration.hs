@@ -49,13 +49,14 @@ clusterEach (EGS dirgen cleanup) cw = do
   mapM_ (runReaderT action) wss
 
 
-
+replication = undefined
+{-
 replication :: (Model a) => WorkSetup a -> WorkIO a () 
 replication masterws = do 
   WS ssetup psetup rsetup csetup _ <- ask 
   let masterworkname = workname psetup        
   liftIO (replicateWorkDir masterworkname ssetup csetup) 
-
+-}
 
 clusterGenEvent :: (Model a) => WorkIO  a () 
 clusterGenEvent = do 

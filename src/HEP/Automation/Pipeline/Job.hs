@@ -3,6 +3,7 @@
 module HEP.Automation.Pipeline.Job where
 
 import Control.Monad.Reader
+import Control.Monad.Error
 
 import HEP.Storage.WebDAV 
 import HEP.Storage.WebDAV.Type
@@ -63,7 +64,23 @@ testJob = PipelineJob
                    
 
 testJob_checkSystem :: WorkConfig -> JobInfo -> IO Bool
-testJob_checkSystem wc jinfo = do 
+testJob_checkSystem wc jinfo = doGenericWorkSetupWork wc jinfo work 
+  where work ws = do 
+          let ss = ws_ssetup ws 
+              ps = ws_psetup ws
+              wb = workbase ss
+              wn = workname ps 
+          b <- doesDirectoryExist (wb </> wn)
+          if b 
+            then return True
+            else do r <- flip runReaderT ws . runErrorT $ createWorkDir ss ps
+                    case r of 
+                      Left errmsg -> do putStrLn errmsg 
+                                        return False
+                      Right _ -> return False
+         
+{-
+do 
   let ss = lc_scriptSetup . wc_localconf $ wc  
   case jobdetail_evset . jobinfo_detail $ jinfo of
     EventSet p r -> do 
@@ -74,25 +91,29 @@ testJob_checkSystem wc jinfo = do
           createWorkDir ss p   
           return True
     _ -> return False
-
+-}
 
 testJob_startWork :: WorkConfig -> JobInfo -> IO Bool
 testJob_startWork wc jinfo = doGenericWorkSetupWork wc jinfo work 
-  where work ws = flip runReaderT ws $ do 
-                         WS _ _ rsetup _ _ <- ask
-                         compileFortran
-                         cardPrepare                      
-                         generateEvents   
-                         case usercut rsetup of
-                           UserCutDef _ -> do 
-                             runHEP2LHE       
-                             runHEPEVT2STDHEP 
-                             runPGS           
-                             runClean         
-                             updateBanner     
-                           NoUserCutDef -> return ()
-                         cleanHepFiles
-                         return True
+  where work ws = do 
+          r <- flip runReaderT ws . runErrorT $ do 
+                 WS _ _ rsetup _ _ <- ask
+                 compileFortran
+                 cardPrepare                      
+                 generateEvents   
+                 case usercut rsetup of
+                   UserCutDef _ -> do 
+                     runHEP2LHE       
+                     runHEPEVT2STDHEP 
+                     runPGS           
+                     runClean         
+                     updateBanner     
+                   NoUserCutDef -> return ()
+                 cleanHepFiles
+          case r of 
+            Left errmsg -> do putStrLn errmsg
+                              return False
+            Right _     -> return True
                    
 doGenericWorkSetupWork :: WorkConfig -> JobInfo 
                        -> (forall a. (Model a) => WorkSetup a -> r) -> r
