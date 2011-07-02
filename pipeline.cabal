@@ -1,5 +1,5 @@
 Name:		pipeline
-Version:	0.3.2.0
+Version:	0.3.3.0
 Synopsis:	pipeline for Mone Carlo run
 Description: 	pipeline for Monte Carlo run, 
                 it manages computing machine and processes.
@@ -35,7 +35,11 @@ Library
   Exposed-Modules: 
                    HEP.Automation.Pipeline
                    HEP.Automation.Pipeline.Config
+                   HEP.Automation.Pipeline.Util
                    HEP.Automation.Pipeline.Job
+                   HEP.Automation.Pipeline.Job.Dummy
+                   HEP.Automation.Pipeline.Job.EventGen
+                   HEP.Automation.Pipeline.Job.Match
  
 --                   HEP.Automation.PipelineOld
 --                   HEP.Automation.PipelineOld.Type
