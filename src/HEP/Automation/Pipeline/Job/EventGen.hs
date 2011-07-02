@@ -7,7 +7,9 @@ import Control.Monad.Error
 
 import HEP.Automation.Pipeline.Job
 import HEP.Automation.Pipeline.Util
+import HEP.Automation.JobQueue.JobType 
 import HEP.Automation.JobQueue.JobQueue
+import HEP.Automation.MadGraph.Machine 
 import HEP.Automation.MadGraph.SetupType
 import HEP.Automation.MadGraph.Run
 import HEP.Automation.MadGraph.UserCut
@@ -54,6 +56,7 @@ eventgenJob_startWork wc jinfo = doGenericWorkSetupWork wc jinfo work
                      runClean         
                      updateBanner     
                    NoUserCutDef -> return ()
+                 makeHepGz 
                  cleanHepFiles
           case r of 
             Left errmsg -> do putStrLn errmsg
@@ -64,7 +67,17 @@ eventgenJob_startTest :: WorkConfig -> JobInfo -> IO Bool
 eventgenJob_startTest _wc _jinfo = return True
 
 eventgenJob_uploadWork :: WorkConfig -> JobInfo -> IO Bool
-eventgenJob_uploadWork wc jinfo = doGenericWorkSetupWork wc jinfo (uploadEventFull wdav)
-    where wdav = mkWebDAVConfig wc
+eventgenJob_uploadWork wc jinfo =
+  case uhep of 
+    UploadHEP   -> doGenericWorkSetupWork wc jinfo (uploadEventFullWithHEP wdav)
+    NoUploadHEP -> doGenericWorkSetupWork wc jinfo (uploadEventFull wdav)
+    
+  where wdav = mkWebDAVConfig wc
+        evset = ( jobdetail_evset . jobinfo_detail) jinfo 
+        uhep = case evset of 
+                 EventSet p r -> uploadhep r
+                 _ -> undefined 
+
+
 
 

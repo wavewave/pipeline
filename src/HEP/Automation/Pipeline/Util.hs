@@ -28,6 +28,16 @@ doGenericWorkSetupWork wc jinfo work =
        EventSet ps rs -> let wsetup = WS ss ps rs cs storage 
                          in  work wsetup 
 
+uploadEventFullWithHEP :: (Model a) => WebDAVConfig -> WorkSetup a -> IO Bool
+uploadEventFullWithHEP wdav wsetup = do 
+  mapM_ (uploadEvent wdav wsetup) 
+    [ "_unweighted_events.lhe.gz", "_events.lhe.gz", "_pythia_events.lhe.gz"
+    , "_pgs_events.lhco.gz", "_banner.txt", "_newbanner.txt", "_pythia.log" 
+    , "_pythia_events.hep.gz" ]  
+  return True 
+
+
+
 
 uploadEventFull :: (Model a) => WebDAVConfig -> WorkSetup a -> IO Bool
 uploadEventFull wdav wsetup = do 
