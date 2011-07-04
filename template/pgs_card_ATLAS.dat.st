@@ -11,7 +11,7 @@ ATLAS               ! parameter set name
 $jetalgo$           ! jet finding algorithm (cone or ktjet)
 3.0                 ! calorimeter trigger cluster finding seed threshold (GeV)
 0.5                 ! calorimeter trigger cluster finding shoulder threshold (GeV)
-0.70                ! calorimeter kt cluster finder cone size (delta R)
+$conesize$                ! calorimeter kt cluster finder cone size (delta R)
 1.0                 ! outer radius of tracker (m)
 2.0                 ! magnetic field (T)
 0.000005            ! sagitta resolution (m)

@@ -11,7 +11,7 @@ CMS                 ! parameter set name
 $jetalgo$           ! jet finding algorithm (cone or ktjet)
 0.5                 ! calorimeter trigger cluster finding seed threshold (GeV)
 0.5                 ! calorimeter trigger cluster finding shoulder threshold (GeV)
-0.5                 ! calorimeter kt cluster finder cone size (delta R)
+$conesize$          ! calorimeter kt cluster finder cone size (delta R)
 1.1                 ! outer radius of tracker (m)
 4.0                 ! magnetic field (T)
 0.000020            ! sagitta resolution (m)
