@@ -8,10 +8,10 @@ CDF                 ! parameter set name
 0.8                 ! hadronic calolrimeter resolution * sqrt(E)
 0.2                 ! MET resolution
 0.05                ! calorimeter cell edge crack fraction
-$jetalgo$           ! jet finding algorithm (cone or ktjet)
+$jetalgo$                 ! jet finding algorithm (cone or ktjet)
 3.0                 ! calorimeter cluster finding seed threshold (GeV)
 0.5                 ! calorimeter cluster finding shoulder threshold (GeV)
-$conesize$          ! calorimeter cluster finder cone size (delta R)
+$conesize$                ! calorimeter cluster finder cone size (delta R)
 1.0                 ! outer radius of tracker (m)
 1.4                 ! magnetic field (T)
 0.000040            ! sagitta resolution (m)
