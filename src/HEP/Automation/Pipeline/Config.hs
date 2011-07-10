@@ -15,6 +15,10 @@ import System.IO
 
 import Paths_pipeline
 
+data MathematicaConfiguration = MathConf { 
+  mc_mathematicaPath :: String 
+} deriving (Show)
+
 data NetworkConfiguration = NC { 
   nc_polling :: Int, 
   nc_jobqueueurl :: String, 
@@ -26,7 +30,8 @@ data LocalConfiguration = LocalConfiguration {
   lc_clientConfiguration :: ClientConfiguration, 
   lc_scriptSetup :: ScriptSetup, 
   lc_smpConfiguration :: SMPConfiguration, 
-  lc_networkConfiguration :: NetworkConfiguration
+  lc_networkConfiguration :: NetworkConfiguration, 
+  lc_mathematicaConfiguration :: MathematicaConfiguration
 } deriving (Show)
 
 
@@ -62,13 +67,26 @@ networkConfigurationParse =
     cadaver <- oneFieldInput "cadaverPath"
     return (NC (read polling) url wget cadaver)
 
+mathematicaConfigurationParse :: ParsecT String () Identity MathematicaConfiguration
+mathematicaConfigurationParse =
+  oneGroupFieldInput "mathematica" $ MathConf <$> oneFieldInput "mathematicaPath"
+
+
 localConfigurationParse :: FilePath -> ParsecT String () Identity LocalConfiguration
-localConfigurationParse tmpldir = do 
+localConfigurationParse tmpldir = 
+  LocalConfiguration <$> clientConfigurationParse
+                     <*> scriptSetupParse tmpldir
+                     <*> smpConfigurationParse
+                     <*> networkConfigurationParse
+                     <*> mathematicaConfigurationParse 
+  
+{- 
   cc  <- clientConfigurationParse
   ss  <- scriptSetupParse tmpldir
   smp <- smpConfigurationParse
   nc  <- networkConfigurationParse
-  return (LocalConfiguration cc ss smp nc)
+-}  
+
 
 readConfigFile :: FilePath -> IO LocalConfiguration
 readConfigFile conf = do 

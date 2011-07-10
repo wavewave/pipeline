@@ -54,9 +54,9 @@ eventgenJob_startWork wc jinfo = doGenericWorkSetupWork wc jinfo work
                      runHEPEVT2STDHEP 
                      runPGS           
                      runClean         
-                     updateBanner     
+                     updateBanner   
                    NoUserCutDef -> return ()
-                 makeHepGz 
+                 makeHepGz
                  cleanHepFiles
           case r of 
             Left errmsg -> do putStrLn errmsg

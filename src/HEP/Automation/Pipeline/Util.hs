@@ -57,6 +57,15 @@ upload wdav wsetup ext ldir = do
   uploadFile wdav (ws_storage wsetup) (ldir </> filename)
 
 
+download :: (Model a) => WebDAVConfig -> WorkSetup a -> String -> IO ()
+download wdav wsetup ext = do 
+  let rname = makeRunName (ws_psetup wsetup) (ws_rsetup wsetup) 
+      filename = rname ++ ext 
+--      rdir = webdav_remotedir remote 
+  putStrLn $ "downloading " ++ filename
+  fetchFile wdav (ws_storage wsetup) filename
+
+
 getMCDir :: (Model a) => WorkSetup a -> String
 getMCDir ws = 
   let ssetup = ws_ssetup ws 
@@ -69,3 +78,5 @@ mkWebDAVConfig wc =
       wget = nc_wgetPath . lc_networkConfiguration . wc_localconf $ wc
       cadaver = nc_cadaverPath . lc_networkConfiguration . wc_localconf $ wc
   in  WebDAVConfig wget cadaver baseurl
+
+

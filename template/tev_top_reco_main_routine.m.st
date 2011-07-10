@@ -9,14 +9,14 @@
 
 
 (* <<"Combinatorica`" *) (* this package is obsolete in version 8, but not in version 7. *)
-<<"$chameleon$" 
+<<"Chameleon1_02.m" 
 
 
-<<"$packageFile$"
+<<"tev_top_reco_july8.m"
 
 
 lhcoFile = "$lhcoFile$" (* _pgs _events.lhco or _pgs _events.lhco.gz *);
-cutEventsFileName = "$cutEventsFileName$"(* _CutEvts.dat *);
+cutEventsFileName = "$cutEventsFileName$" (* _CutEvts.dat *);
 recoEventsFileName = "$recoEventsFileName$" (* _RecoEvts.dat *);
 passedEventsFileName = "$passedEventsFileName$" (* PassedEvts.dat *);
 recoInfoFileName = "$recoInfoFileName$" (* RecoInfo.dat *);
