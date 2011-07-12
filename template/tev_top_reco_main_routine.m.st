@@ -8,7 +8,7 @@
 (*This should change to the name of the directory where you'll place the Chameleon package:*)
 
 
-(* <<"Combinatorica`" *) (* this package is obsolete in version 8, but not in version 7. *)
+<<"Combinatorica`" (* this package is obsolete in version 8, but not in version 7. *)
 <<"Chameleon1_02.m" 
 
 
