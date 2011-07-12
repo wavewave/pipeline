@@ -48,6 +48,21 @@ tevTopReco = MathematicaJobSpec {
   math_stdout_postfix = "_tev_top_reco.log"
 }
 
+atlasLHCOBinInfo = MathematicaJobSpec { 
+  math_inputfile_var_postfix   = [ ( "pgsfilename"          , "_pgs_events.lhco.gz" ) 
+                                 , ( "pythialogname"        , "_pythia.log") ], 
+  math_outputfile_var_postfix  = [ ( "cutexportfilename"    , "_cut_pgs_events.dat")
+                                 , ( "ordevtexportfilename" , "_ordered_pgs_events.dat")
+                                 , ( "binexportfilename"    , "_binned_pgs_events.dat")
+                                 , ( "njetTwoZeroexportfilename", "_njet20_pgs_events.dat")
+                                 , ( "njetTwoFiveexportfilename", "_njet25_pgs_events.dat")
+                                 , ( "njetThreeZeroexportfilename", "_njet30_pgs_events.dat") ],
+  math_library_filename = [ "Chameleon1_02.m" , "general_functions.m", "atlas_lhco_processing_functions.m" ], 
+  math_driver_filename = "process_pgs_file.m", 
+  math_stdout_postfix = "_atlas_lhco_processiong.log"
+}
+
+
 getTemplateDir :: IO FilePath  
 getTemplateDir = getDataDir >>= return . ( </> "template" ) 
 

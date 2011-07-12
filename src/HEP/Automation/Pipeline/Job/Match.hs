@@ -11,4 +11,5 @@ jobMatch :: JobInfo -> PipelineJob
 jobMatch jinfo = case jobinfo_detail jinfo of
                    EventGen _ _ -> eventgenJob
                    MathAnal "tev_reco" _ _ -> mathanalJob tevTopReco 
+                   MathAnal "atlas_lhco" _ _ -> mathanalJob atlasLHCOBinInfo
                    _ -> dummyJob
