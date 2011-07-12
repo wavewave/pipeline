@@ -66,7 +66,7 @@ DECAY   6 1.508336e+00 # WT
 DECAY  23 2.495200e+00 # WZ 
 DECAY  24 2.085000e+00 # WW 
 DECAY  25 5.753088e-03 # WH 
-DECAY 9000006 1.000000e+00 # Wnp 
+DECAY 9000006 $wnp$       # Wnp 
 ##  Not dependent paramater.
 ## Those values should be edited following the 
 ## analytical expression. MG5 ignore those values 
