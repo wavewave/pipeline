@@ -17,7 +17,9 @@ Block mass
    15 1.777000e+00 # MTA 
    23 9.118760e+01 # MZ 
    25 1.200000e+02 # MH 
-  9000006 $mnp$    # Mnp 
+  9000006 $mnp$        # Mnp 
+  9000007 $mphi$       # MphiP 
+  9000008 $mphi$       # MphiM 
 ##  Not dependent paramater.
 ## Those values should be edited following the 
 ## analytical expression. MG5 ignore those values 
@@ -40,12 +42,8 @@ Block mass
 ## INFORMATION FOR NPBLOCK
 ###################################
 Block npblock 
-    1 $gnpqR$      # gnpqR 
-    2 $gnpqL$      # gnpqL 
-    3 $gnpbR$      # gnpbR 
-    4 $gnpbL$      # gnpbL 
-    5 $gnptR$      # gnptR 
-    6 $gnptL$      # gnptL 
+    1 $ga$         # ga 
+    2 $nphi$       # nphi 
 
 ###################################
 ## INFORMATION FOR SMINPUTS
@@ -70,7 +68,9 @@ DECAY   6 1.508336e+00 # WT
 DECAY  23 2.495200e+00 # WZ 
 DECAY  24 2.085000e+00 # WW 
 DECAY  25 5.753088e-03 # WH 
-DECAY 9000006 $wnp$    # Wnp 
+DECAY 9000006 $wnp$        # Wnp 
+DECAY 9000007 1.000000e+00 # WphiP 
+DECAY 9000008 1.000000e+00 # WphiM 
 ##  Not dependent paramater.
 ## Those values should be edited following the 
 ## analytical expression. MG5 ignore those values 
@@ -96,5 +96,15 @@ DECAY  21 0.000000 # g : 0.0
 Block QNUMBERS 9000006  # phinp 
         1 0  # 3 times electric charge
         2 3  # number of spin states (2S+1)
+        3 8  # colour rep (1: singlet, 3: triplet, 8: octet)
+        4 0  # Particle/Antiparticle distinction (0=own anti)
+Block QNUMBERS 9000007  # phip 
+        1 0  # 3 times electric charge
+        2 1  # number of spin states (2S+1)
+        3 8  # colour rep (1: singlet, 3: triplet, 8: octet)
+        4 0  # Particle/Antiparticle distinction (0=own anti)
+Block QNUMBERS 9000008  # phim 
+        1 0  # 3 times electric charge
+        2 1  # number of spin states (2S+1)
         3 8  # colour rep (1: singlet, 3: triplet, 8: octet)
         4 0  # Particle/Antiparticle distinction (0=own anti)
