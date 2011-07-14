@@ -48,6 +48,18 @@ tevTopReco = MathematicaJobSpec {
   math_stdout_postfix = "_tev_top_reco.log"
 }
 
+tevTopAFB = MathematicaJobSpec { 
+  math_inputfile_var_postfix   = [ ( "passedevtsFile"      , "_PassedEvts.dat" ) 
+                                 , ( "logFile"             , "_pythia.log") ], 
+  math_outputfile_var_postfix  = [ ( "binnedPassedEvtsFile", "_Binned_PassedEvts.dat" ) ], 
+  math_library_filename        = [ "Chameleon1_02.m" 
+                                 , "tev_afb_recodataprocessing.m" 
+                                 , "general_functions.m" ], 
+  math_driver_filename         = "process_passedevtsDAT_file.m", 
+  math_stdout_postfix          = "_tev_top_afb.log"
+}
+
+
 atlasLHCOBinInfo = MathematicaJobSpec { 
   math_inputfile_var_postfix   = [ ( "pgsfilename"          , "_pgs_events.lhco.gz" ) 
                                  , ( "pythialogname"        , "_pythia.log") ], 
