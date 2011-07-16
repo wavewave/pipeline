@@ -177,6 +177,7 @@ mathanalJob_uploadWork mjob wc jinfo = doGenericWorkSetupWork wc jinfo work
           r <- flip runReaderT ws . runErrorT $ do 
             let eraseExt (_,ext) = existThenRemove ((workingdir ss) </> runName ++ ext)
             mapM_ eraseExt (math_inputfile_var_postfix mjob)
+            mapM_ eraseExt (math_outputfile_var_postfix mjob)
           case r of 
             Left errmsg -> do putStrLn errmsg
                               return False 
