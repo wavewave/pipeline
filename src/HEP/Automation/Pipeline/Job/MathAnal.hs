@@ -172,4 +172,13 @@ mathanalJob_uploadWork mjob wc jinfo = doGenericWorkSetupWork wc jinfo work
           let runName = makeRunName (ws_psetup ws) (ws_rsetup ws)
           mapM_ (\(_,ext) -> upload wdav ws ext (workingdir ss)) 
                 (math_outputfile_var_postfix mjob)
-          return True 
+
+          threadDelay (10000000)
+          r <- flip runReaderT ws . runErrorT $ do 
+            let eraseExt (_,ext) = existThenRemove ((workingdir ss) </> runName ++ ext)
+            mapM_ eraseExt (math_inputfile_var_postfix mjob)
+          case r of 
+            Left errmsg -> do putStrLn errmsg
+                              return False 
+            Right _     -> return True 
+

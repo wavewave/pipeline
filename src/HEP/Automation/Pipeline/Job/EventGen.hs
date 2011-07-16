@@ -57,7 +57,8 @@ eventgenJob_startWork wc jinfo = doGenericWorkSetupWork wc jinfo work
                      updateBanner   
                    NoUserCutDef -> return ()
                  makeHepGz
-                 cleanHepFiles
+                 cleanAll
+--                 cleanHepFiles
           case r of 
             Left errmsg -> do putStrLn errmsg
                               return False
