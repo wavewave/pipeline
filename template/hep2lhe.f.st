@@ -610,7 +610,7 @@ c      call stdxend(ISTR2)
  4001 FORMAT(i3,i5,f9.3,f7.3,f8.2,f8.2,2f6.1,f9.2,2f6.1)
 c...IWKIM HEPEVT FORMAT
  500  FORMAT(i7,i4)
- 501  FORMAT(i5,i4,i7,i4,i4,i4,i4,9E16.8)
+ 501  FORMAT(i5,i5,i9,i4,i4,i4,i4,9E16.8)
 
 
  999  WRITE(*,*) 'Error in one of the KTCLUS routines'
