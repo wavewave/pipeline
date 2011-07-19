@@ -106,6 +106,20 @@ vtbar = antiTopFourVec[evt];
 
 
 (* ::Section:: *)
+(*lhe function*)
+
+
+yymLHE[evt_]:=Module[{top=Flatten[Cases[evt,oTop]],atop = Flatten[Cases[evt,oATop]],vt,vtbar},If[Length[top]>13,Print["Error: More than one top in this event."]; Abort[];,
+
+vt=fourVector[top];
+vtbar = fourVector[atop];
+
+{rap[vt],rap[vtbar],fourLength[vt+vtbar]}
+
+]]
+
+
+(* ::Section:: *)
 (*bin count functions*)
 
 
@@ -181,3 +195,31 @@ Remove[data,log,wn,yyms,dN,dNlab,dNcm,chis,dChi3,dChiCDF]
 
 
 exportRecoBinDataForm = {{"weight (pb)","N generated evts"},{"N passed evts"},{"dN \[Sigma]mbins2","dNlab w mbinsCDF2","dNcm w ybins1 mbinsCDF2"},{"dChi3 chibins3","dChiCDF chibinsCDF"}};
+
+
+exportPythiaBinData[pythiafilename_,logfilename_][exportname_]:=Module[{data,log,wn,yyms,passevts,dN,dNlab,dNcm},
+(* import data *)
+data =getLHEdata[pythiafilename];
+log = Import[logfilename];
+
+(* weight and num evts from log file *)
+wn = getWeightAndNumEvtsFromLogFile[log];
+
+yyms = yymLHE/@data;
+
+passevts= Length[yyms];
+
+(* bin data *)
+dN = \[Sigma]BinData[\[Sigma]mbins2][yyms];
+
+dNlab = labFrameBinData[mbinsCDF2][yyms];
+
+dNcm = CMFrameBinData[ybins1,mbinsCDF2][yyms];
+
+(* export data *)
+Export[exportname,{wn,{passevts},{dN,dNlab,dNcm}}];
+Remove[data,log,wn,yyms,dN,dNlab,dNcm]
+]
+
+
+exportPythiaBinDataForm = {{"weight (pb)","N generated evts"},{"N passed evts"},{"dN \[Sigma]mbins2","dNlab w mbinsCDF2","dNcm w ybins1 mbinsCDF2"},{"dChi3 chibins3","dChiCDF chibinsCDF"}};

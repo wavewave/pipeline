@@ -59,6 +59,17 @@ tevTopAFB = MathematicaJobSpec {
   math_stdout_postfix          = "_tev_top_afb.log"
 }
 
+tevpythia = MathematicaJobSpec { 
+  math_inputfile_var_postfix   = [ ( "pythiafilename"      , "_pythia_events.lhe.gz" ) 
+                                 , ( "pythialogname"       , "_pythia.log") ], 
+  math_outputfile_var_postfix  = [ ( "exportfilename", "_binned_pythia_events.dat" ) ], 
+  math_library_filename        = [ "Chameleon1_02.m" 
+                                 , "tev_afb_recodataprocessing.m" 
+                                 , "general_functions.m" ], 
+  math_driver_filename         = "process_tevpythia_file.m", 
+  math_stdout_postfix          = "_tevpythia.log"
+}
+
 
 atlasLHCOBinInfo = MathematicaJobSpec { 
   math_inputfile_var_postfix   = [ ( "pgsfilename"          , "_pgs_events.lhco.gz" ) 
