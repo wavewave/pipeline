@@ -42,6 +42,7 @@ clientConfigurationParse =
                         <*> (oneFieldInput "haveMathematica" >>= return . yesNo)
                         <*> (oneFieldInput "havePBS" >>= return . yesNo)
                         <*> (oneFieldInput "canMonteCarlo" >>= return . yesNo)
+                        <*> (oneFieldInput "datasetDir")
 
 scriptSetupParse :: FilePath -> ParsecT String () Identity ScriptSetup
 scriptSetupParse tmpldir = 
