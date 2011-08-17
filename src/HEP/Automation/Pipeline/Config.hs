@@ -34,6 +34,15 @@ data LocalConfiguration = LocalConfiguration {
   lc_mathematicaConfiguration :: MathematicaConfiguration
 } deriving (Show)
 
+data TestConfiguration = TestConfiguration { 
+  tc_storageurl :: String
+} deriving (Show)
+
+testConfigurationParse :: ParsecT String () Identity TestConfiguration 
+testConfigurationParse = 
+  oneGroupFieldInput "testconf" $
+    TestConfiguration <$> (oneFieldInput "storageURL")
+
 
 clientConfigurationParse :: ParsecT String () Identity ClientConfiguration
 clientConfigurationParse =
@@ -81,12 +90,6 @@ localConfigurationParse tmpldir =
                      <*> networkConfigurationParse
                      <*> mathematicaConfigurationParse 
   
-{- 
-  cc  <- clientConfigurationParse
-  ss  <- scriptSetupParse tmpldir
-  smp <- smpConfigurationParse
-  nc  <- networkConfigurationParse
--}  
 
 
 readConfigFile :: FilePath -> IO LocalConfiguration
@@ -96,6 +99,17 @@ readConfigFile conf = do
     str <- hGetContents fh --  readFile conf
     tmpldir <- return . ( </> "template" ) =<< getDataDir
     let r = parse (localConfigurationParse tmpldir) "" str
+    case r of 
+      Right result -> do putStrLn (show result) 
+                         return $! result
+      Left err -> error (show err) 
+
+readTestConfigFile :: FilePath -> IO TestConfiguration
+readTestConfigFile tconf = do 
+  putStrLn tconf
+  bracket (openFile tconf ReadMode) hClose $ \fh -> do 
+    str <- hGetContents fh --  readFile tconf
+    let r = parse testConfigurationParse "" str
     case r of 
       Right result -> do putStrLn (show result) 
                          return $! result
