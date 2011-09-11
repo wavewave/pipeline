@@ -48,6 +48,7 @@ Library
                    HEP.Automation.Pipeline.Util
                    HEP.Automation.Pipeline.Job
                    HEP.Automation.Pipeline.Job.Dummy
+                   HEP.Automation.Pipeline.Job.DummyTest
                    HEP.Automation.Pipeline.Job.EventGen
                    HEP.Automation.Pipeline.Job.MathAnal
                    HEP.Automation.Pipeline.Job.Match
