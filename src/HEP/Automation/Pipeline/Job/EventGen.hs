@@ -48,14 +48,29 @@ eventgenJob_startWork wc jinfo = doGenericWorkSetupWork wc jinfo work
                  compileFortran
                  cardPrepare                      
                  generateEvents   
-                 case usercut rsetup of
-                   UserCutDef _ -> do 
+                 case (lhesanitizer rsetup,usercut rsetup) of
+                   (NoLHESanitize, NoUserCutDef) -> return ()
+                   (NoLHESanitize, UserCutDef _) -> do 
                      runHEP2LHE       
                      runHEPEVT2STDHEP 
                      runPGS           
                      runClean         
                      updateBanner   
-                   NoUserCutDef -> return ()
+                   (LHESanitize pid, NoUserCutDef) -> do 
+                     runPYTHIA
+                     runPGS           
+                     runClean         
+                     updateBanner   
+                   (LHESanitize pid, UserCutDef _) -> do 
+                     runPYTHIA
+                     runHEP2LHE       
+                     runHEPEVT2STDHEP 
+                     runPGS           
+                     runClean         
+                     updateBanner   
+
+
+
                  makeHepGz
 --                 cleanAll
 --                 cleanHepFiles
