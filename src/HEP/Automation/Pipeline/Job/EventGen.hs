@@ -57,20 +57,20 @@ eventgenJob_startWork wc jinfo = doGenericWorkSetupWork wc jinfo work
                      runClean         
                      updateBanner   
                    (LHESanitize pid, NoUserCutDef) -> do 
+                     sanitizeLHE
                      runPYTHIA
+                     runHEP2LHE
                      runPGS           
                      runClean         
                      updateBanner   
                    (LHESanitize pid, UserCutDef _) -> do 
+                     sanitizeLHE
                      runPYTHIA
                      runHEP2LHE       
                      runHEPEVT2STDHEP 
                      runPGS           
                      runClean         
                      updateBanner   
-
-
-
                  makeHepGz
 --                 cleanAll
 --                 cleanHepFiles

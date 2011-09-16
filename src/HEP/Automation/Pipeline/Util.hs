@@ -55,6 +55,7 @@ upload wdav wsetup ext ldir = do
   let rname = makeRunName (ws_psetup wsetup) (ws_rsetup wsetup)
       filename = rname ++ ext
   uploadFile wdav (ws_storage wsetup) (ldir </> filename)
+  return ()
 
 
 download :: (Model a) => WebDAVConfig -> WorkSetup a -> String -> IO ()
