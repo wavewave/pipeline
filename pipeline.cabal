@@ -1,9 +1,9 @@
 Name:		pipeline
-Version:	0.3.9 
+Version:	0.3.9.999
 Synopsis:	pipeline for Mone Carlo run
 Description: 	pipeline for Monte Carlo run, 
                 it manages computing machine and processes.
-License: 	GPL-3
+License: 	BSD3
 License-file:	LICENSE
 Author:		Ian-Woo Kim
 Maintainer: 	Ian-Woo Kim <ianwookim@gmail.com>
