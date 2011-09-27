@@ -149,8 +149,8 @@ mathanalJob_startWork mjob wc jinfo = doGenericWorkSetupWork wc jinfo work
                  mapM_ (flip checkFile 5) downloadedFileNames
                  liftIO $ system $ math ++ " < " 
                                         ++ math_driver_filename mjob
-                                        ++ " > " 
-                                        ++ stdout_filename  
+{-                                        ++ " > " 
+                                        ++ stdout_filename  -}
  
           case r of 
             Left errmsg -> do putStrLn errmsg

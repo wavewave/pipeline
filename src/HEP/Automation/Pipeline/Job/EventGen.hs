@@ -65,7 +65,6 @@ eventgenJob_startWork wc jinfo = doGenericWorkSetupWork wc jinfo work
                      updateBanner   
                    (LHESanitize pid, NoUserCutDef, NoPYTHIA) -> do 
                      sanitizeLHE
-                     runClean         
                      updateBanner   
                    (LHESanitize pid, UserCutDef _,RunPYTHIA) -> do 
                      sanitizeLHE
@@ -77,7 +76,6 @@ eventgenJob_startWork wc jinfo = doGenericWorkSetupWork wc jinfo work
                      updateBanner   
                    (LHESanitize pid, UserCutDef _,NoPYTHIA) -> do 
                      sanitizeLHE
-                     runClean         
                      updateBanner   
                  makeHepGz
 --                 cleanAll
