@@ -1,5 +1,5 @@
 Name:		pipeline
-Version:	0.3.9.999
+Version:	0.3.10
 Synopsis:	pipeline for Mone Carlo run
 Description: 	pipeline for Monte Carlo run, 
                 it manages computing machine and processes.
