@@ -40,8 +40,8 @@
 #*********************************************************************
 # Beam polarization from -100 (left-handed) to 100 (right-handed)    *
 #*********************************************************************
-        0     = polbeam1 ! beam polarization for beam 1
-        0     = polbeam2 ! beam polarization for beam 2
+ $beamPolOne$   = polbeam1 ! beam polarization for beam 1
+ $beamPolTwo$   = polbeam2 ! beam polarization for beam 2
 #*********************************************************************
 # PDF CHOICE: this automatically fixes also alpha_s and its evol.    *
 #*********************************************************************
