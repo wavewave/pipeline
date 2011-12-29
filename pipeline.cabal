@@ -1,5 +1,5 @@
 Name:		pipeline
-Version:	0.3.10.999
+Version:	0.3.11
 Synopsis:	pipeline for Mone Carlo run
 Description: 	pipeline for Monte Carlo run, 
                 it manages computing machine and processes.
@@ -21,13 +21,13 @@ data-files: template/*.f
             template/*.sh.st
             template/run_pgs_notau
 
-Executable pipeline-test
-  Main-is: pipeline-test.hs
-  hs-source-dirs: src 
-  ghc-options: 	-Wall -O2 -threaded -funbox-strict-fields -fno-warn-unused-do-bind
-  ghc-prof-options: -caf-all -auto-all
-  Build-Depends: base>4, process, unix, directory, mtl>2, 
-                 HEPUtil >= 0.0.4
+--Executable pipeline-test
+--  Main-is: pipeline-test.hs
+--  hs-source-dirs: src 
+--  ghc-options: 	-Wall -O2 -threaded -funbox-strict-fields -fno-warn-unused-do-bind
+--  ghc-prof-options: -caf-all -auto-all
+--  Build-Depends: base>4, process, unix, directory, mtl>2, 
+--                 HEPUtil >= 0.0.4
 
 Library
   hs-source-dirs: src
