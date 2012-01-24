@@ -38,10 +38,11 @@ Library
                  LHCOAnalysis-type, LHCOAnalysis >0.5, webdav-manager > 0.0.2,
                  LHEParser, HEPUtil, attoparsec,
                  webdav-manager > 0.0.2,
-                 attoparsec,
+                 attoparsec == 0.10.*,
                  iteratee, iteratee-util > 0.0.2, binary, bytestring,
                  HStringTemplate, HStringTemplateHelpersIW, 
-                 jobqueue-common, configparser
+                 jobqueue-common == 0.2.*, 
+                 configparser
   Exposed-Modules: 
                    HEP.Automation.Pipeline
                    HEP.Automation.Pipeline.Config
