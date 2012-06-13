@@ -38,11 +38,14 @@ data TestConfiguration = TestConfiguration {
   tc_storageurl :: String
 } deriving (Show)
 
+-- | 
+
 testConfigurationParse :: ParsecT String () Identity TestConfiguration 
 testConfigurationParse = 
   oneGroupFieldInput "testconf" $
     TestConfiguration <$> (oneFieldInput "storageURL")
 
+-- | 
 
 clientConfigurationParse :: ParsecT String () Identity ClientConfiguration
 clientConfigurationParse =
@@ -53,12 +56,16 @@ clientConfigurationParse =
                         <*> (oneFieldInput "canMonteCarlo" >>= return . yesNo)
                         <*> (oneFieldInput "datasetDir")
 
+-- | 
+
 scriptSetupParse :: FilePath -> ParsecT String () Identity ScriptSetup
 scriptSetupParse tmpldir = 
   oneGroupFieldInput "scriptconf" $ 
     SS tmpldir <$> (oneFieldInput "workingdir")
                <*> (oneFieldInput "mg5base")
                <*> (oneFieldInput "workbase")
+
+-- | 
 
 smpConfigurationParse :: ParsecT String () Identity SMPConfiguration
 smpConfigurationParse = 
@@ -67,6 +74,8 @@ smpConfigurationParse =
      case (read ncpu) of 
        1 -> return SingleCPU
        n -> return (MultiCPU n)
+
+-- | 
 
 networkConfigurationParse :: ParsecT String () Identity NetworkConfiguration
 networkConfigurationParse =
@@ -77,10 +86,13 @@ networkConfigurationParse =
     cadaver <- oneFieldInput "cadaverPath"
     return (NC (read polling) url wget cadaver)
 
+-- |
+
 mathematicaConfigurationParse :: ParsecT String () Identity MathematicaConfiguration
 mathematicaConfigurationParse =
   oneGroupFieldInput "mathematica" $ MathConf <$> oneFieldInput "mathematicaPath"
 
+-- | 
 
 localConfigurationParse :: FilePath -> ParsecT String () Identity LocalConfiguration
 localConfigurationParse tmpldir = 
@@ -90,7 +102,7 @@ localConfigurationParse tmpldir =
                      <*> networkConfigurationParse
                      <*> mathematicaConfigurationParse 
   
-
+-- |
 
 readConfigFile :: FilePath -> IO LocalConfiguration
 readConfigFile conf = do 
@@ -103,6 +115,8 @@ readConfigFile conf = do
       Right result -> do putStrLn (show result) 
                          return $! result
       Left err -> error (show err) 
+
+-- | 
 
 readTestConfigFile :: FilePath -> IO TestConfiguration
 readTestConfigFile tconf = do 
