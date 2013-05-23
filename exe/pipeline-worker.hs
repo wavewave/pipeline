@@ -9,22 +9,17 @@
 -- Stability   : experimental
 -- Portability : GHC
 --
--- server program for pipeline
+-- worker node in pipeline
 --
 -----------------------------------------------------------------------------
 
 module Main where
 
-import Data.Monoid (mconcat) 
-import Web.Scotty 
+-- import Data.Monoid (mconcat) 
+-- import Web.Scotty 
 
 
 main :: IO ()
 main = do 
-  putStrLn "starting pipeline-server"
-
-  scotty 3000 $ do 
-    get "/:word" $ do 
-      beam <- param "word"
-      html $ mconcat ["<h1>Scotty, ", beam, " me up!</h1>"]
+  putStrLn "starting pipeline-worker"
 

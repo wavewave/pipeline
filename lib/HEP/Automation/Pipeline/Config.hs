@@ -26,13 +26,6 @@ data NetworkConfiguration = NC {
   nc_cadaverPath :: FilePath
 } deriving (Show)
 
-data LocalConfiguration = LocalConfiguration { 
-  lc_clientConfiguration :: ClientConfiguration, 
-  lc_scriptSetup :: ScriptSetup, 
-  lc_smpConfiguration :: SMPConfiguration, 
-  lc_networkConfiguration :: NetworkConfiguration, 
-  lc_mathematicaConfiguration :: MathematicaConfiguration
-} deriving (Show)
 
 data TestConfiguration = TestConfiguration { 
   tc_storageurl :: String

@@ -20,14 +20,25 @@ data-files:
             -- template/*.sh.st
             -- template/run_pgs_notau
 
-Executable pipeline-server
-  Main-is: pipeline-server.hs
+Executable pipeline-supervisor
+  Main-is: pipeline-supervisor.hs
   hs-source-dirs: exe
   ghc-options: 	-Wall -O2 -threaded -funbox-strict-fields -fno-warn-unused-do-bind
   ghc-prof-options: -caf-all -auto-all
   Build-Depends: base>4, 
                  cmdargs >= 0.7, 
                  scotty >= 0.4.6
+
+
+Executable pipeline-worker 
+  Main-is: pipeline-worker.hs
+  hs-source-dirs: exe
+  ghc-options: 	-Wall -O2 -threaded -funbox-strict-fields -fno-warn-unused-do-bind
+  ghc-prof-options: -caf-all -auto-all
+  Build-Depends: base>4, 
+                 cmdargs >= 0.7
+
+
 
 
  
