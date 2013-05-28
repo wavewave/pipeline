@@ -10,24 +10,15 @@ Maintainer: 	Ian-Woo Kim <ianwookim@gmail.com>
 Build-Type: 	Simple
 Cabal-Version:  >= 1.6
 data-files: 
-            -- template/*.f
-            -- template/*.m.st
-            -- template/*.m
-            -- template/*.f.st
-            -- template/*.pbs.st
-            -- template/*.dat
-            -- template/*.inc
-            -- template/*.sh.st
-            -- template/run_pgs_notau
 
-Executable pipeline-supervisor
-  Main-is: pipeline-supervisor.hs
-  hs-source-dirs: exe
-  ghc-options: 	-Wall -O2 -threaded -funbox-strict-fields -fno-warn-unused-do-bind
-  ghc-prof-options: -caf-all -auto-all
-  Build-Depends: base>4, 
-                 cmdargs >= 0.7, 
-                 scotty >= 0.4.6
+-- Executable pipeline-supervisor
+--   Main-is: pipeline-supervisor.hs
+--   hs-source-dirs: exe
+--   ghc-options: 	-Wall -O2 -threaded -funbox-strict-fields -fno-warn-unused-do-bind
+--   ghc-prof-options: -caf-all -auto-all
+--   Build-Depends: base>4, 
+--                  cmdargs >= 0.7, 
+--                 scotty >= 0.4.6
 
 
 Executable pipeline-worker 
@@ -36,55 +27,14 @@ Executable pipeline-worker
   ghc-options: 	-Wall -O2 -threaded -funbox-strict-fields -fno-warn-unused-do-bind
   ghc-prof-options: -caf-all -auto-all
   Build-Depends: base>4, 
-                 cmdargs >= 0.7
+                 cmdargs >= 0.7, 
+                 process, 
+                 time, 
+                 filepath, 
+                 pipeline-eventgen,
+                 webdav-manager
 
 
 
 
  
--- Library
---  hs-source-dirs: lib
---  ghc-options: 	-Wall -O2 -threaded -funbox-strict-fields -fno-warn-unused-do-bind
---  ghc-prof-options: -caf-all -auto-all
---  Build-Depends: base>4, 
---                 process, 
---                 unix, 
---                 directory, 
---                 mtl>2, 
---                 filepath,
---                 webdav-manager    >= 0.999
---  Exposed-Modules: 
---                   HEP.Automation.Pipeline.Job
---                   HEP.Automation.Pipeline.Job.Dummy
---                   HEP.Automation.Pipeline.Job.DummyTest
---  Other-Modules:   
---                   Paths_pipeline
-
-
-                   -- HEP.Automation.Pipeline
-                   -- HEP.Automation.Pipeline.Config
-                   -- HEP.Automation.Pipeline.Util
-                   -- HEP.Automation.Pipeline.Job.EventGen
-                   -- HEP.Automation.Pipeline.Job.MathAnal
-                   -- HEP.Automation.Pipeline.Job.Match
-
-
-
-                 -- madgraph-auto > 0.4,  
-                 -- parsec>3, 
-                 -- LHCOAnalysis-type >= 0.999, 
-                 -- LHCOAnalysis      >= 0.999, 
-                 -- webdav-manager    >= 0.999,
-                 -- LHEParser         >= 0.999, 
-                 -- HEPUtil           >= 0.999, 
-                 -- attoparsec >= 0.10,
-                 -- iteratee, 
-                 -- iteratee-util > 0.0.2, 
-                 -- binary, 
-                 -- bytestring,
-                 -- HStringTemplate, 
-                 -- HStringTemplateHelpersIW, 
-                 -- jobqueue-common == 0.2.*, 
-                 -- configparser
-
-		 
